@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#142c36">
+  <meta name="description" content="606情報局：誰是局外人？偵探學院單機任務，支援機密宮格抽選與輪流查看情報員／臥底身分。">
+  <title>606情報局｜誰是局外人？</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #18392f;
+      --ink-muted: #587367;
+      --ink-soft: #7f9789;
+      --primary: #276c55;
+      --primary-deep: #184c3b;
+      --lime: #d8ef70;
+      --surface: #ffffff;
+      --stroke: #dfebe2;
+      --board: #f5f9ef;
+      --shadow: 0 28px 75px rgba(29, 75, 54, .095), 0 7px 22px rgba(34, 66, 47, .04);
+      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { min-height: 100%; }
+    body { margin: 0; min-height: 100vh; color: var(--ink); background: #edf6ed;
+      background-image: radial-gradient(circle at 3% 8%, rgba(198,235,153,.56), transparent 29%), radial-gradient(circle at 95% 78%, rgba(209,237,220,.9), transparent 34%), linear-gradient(145deg, #f7faf2 10%, #e7f4ee 98%);
+    }
+    button, select { font: inherit; }
+    button { -webkit-tap-highlight-color: transparent; }
+    button:focus-visible { outline: 3px solid #f6ac42; outline-offset: 3px; }
+    button:disabled { cursor: not-allowed; }
+    .site-shell { width: min(1180px, calc(100% - 48px)); margin: 0 auto; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 28px; }
+    .brand { display: flex; align-items: center; gap: 11px; font-weight: 900; letter-spacing: -.035em; }
+    .brand-mark { width: 43px; height: 43px; border-radius: 15px; display: grid; place-items: center; color: #174833; background: var(--lime); box-shadow: inset 0 -4px 0 rgba(28,71,30,.1); }
+    .brand-mark svg { width: 30px; height: 30px; }
+    .brand-name { font-size: 18px; }
+    .brand-english { font-size: 10px; font-weight: 800; letter-spacing: .18em; color: #668875; margin-top: 1px; }
+    .top-actions { display: flex; gap: 10px; }
+    .top-action { display: inline-flex; align-items: center; justify-content: center; gap: 7px; border: 1px solid #d6e6d8; border-radius: 999px; background: rgba(255,255,255,.7); padding: 11px 15px; color: #35624c; font-size: 13px; font-weight: 800; cursor: pointer; transition: background .2s, transform .2s; }
+    .top-action:hover { background: white; transform: translateY(-1px); }
+    .top-action svg { width: 16px; height: 16px; }
+    .hero { padding: 41px 0 28px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,.69); padding: 8px 12px; border-radius: 999px; color: #437e5b; font-size: 12px; font-weight: 800; letter-spacing: .1em; }
+    .eyebrow .dot { height: 7px; width: 7px; background: #64ae64; border-radius: 50%; box-shadow: 0 0 0 4px rgba(100,174,100,.12); }
+    h1 { font-size: clamp(32px, 4.1vw, 54px); line-height: 1.22; letter-spacing: -.06em; margin: 16px 0 11px; font-weight: 900; }
+    .hero-highlight { color: #4c9165; }
+    .hero-desc { font-size: clamp(14px, 1.5vw, 16px); line-height: 1.8; color: var(--ink-muted); margin: 0; }
+    .workspace { display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(305px, .82fr); gap: 22px; align-items: start; }
+    .board-card, .control-card { background: rgba(255,255,255,.95); border: 1px solid rgba(255,255,255,.9); border-radius: 30px; box-shadow: var(--shadow); }
+    .board-card { padding: 27px 30px 30px; overflow: hidden; }
+    .board-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 17px; }
+    .section-overline { color: #86a091; font-weight: 800; font-size: 11px; letter-spacing: .13em; text-transform: uppercase; }
+    h2 { font-size: 19px; font-weight: 900; letter-spacing: -.035em; margin: 5px 0 0; }
+    .board-counter { background: #eef6ef; padding: 9px 12px; border-radius: 12px; color: #4c7460; font-size: 12px; font-weight: 800; white-space: nowrap; }
+    .board-stage { border-radius: 25px; background: #f5f9f1; border: 1px solid #e6efe1; padding: 24px 25px 25px 17px; position: relative; }
+    .board-stage::before { content:""; position: absolute; top: -45px; left: -45px; width: 160px; height: 160px; pointer-events:none; border-radius: 50%; background: radial-gradient(circle,rgba(209,231,136,.23),transparent 68%); }
+    .board-grid { --count: 4; --cell-gap: 10px; display: grid; grid-template-columns: 27px repeat(var(--count), minmax(0, 1fr)); gap: var(--cell-gap); position: relative; z-index: 1; width: 100%; max-width: 570px; margin: auto; }
+    .corner { aspect-ratio: 1; }
+    .axis-label { display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; color: #81a18a; min-width: 0; }
+    .axis-label.row-axis { font-size: 13px; }
+    .tile { display: grid; place-items: center; aspect-ratio: 1; min-width: 0; border: 1px solid #dce9dc; background: #fff; border-radius: 16px; color: #92aa9b; font-weight: 900; font-size: clamp(17px, 2.5vw, 28px); letter-spacing: -.035em; position: relative; transition: background .11s, color .11s, border-color .11s, box-shadow .11s, transform .11s; user-select: none; }
+    .tile::after { content: ""; position: absolute; inset: 6px; border: 1px solid rgba(80,127,78,.05); border-radius: 11px; pointer-events: none; }
+    .tile.is-flashing { background: #c8ed6a; color: #194633; border-color: #a4d441; box-shadow: 0 0 0 3px rgba(146,196,50,.18), 0 7px 18px rgba(103,139,29,.23); transform: scale(1.04); z-index: 2; }
+    .tile.is-selected { background: #285e48; border-color: #285e48; color: #fff; box-shadow: 0 7px 0 #b9d45b, 0 12px 24px rgba(40,94,72,.23); transform: translateY(-3px); z-index: 2; }
+    .tile.is-selected::after { border-color: rgba(255,255,255,.15); }
+    .tile.is-selected::before { content: "✦"; position: absolute; top: 6px; right: 9px; font-size: 14px; color: #dfef91; }
+    .board-foot { display:flex; align-items:center; justify-content:center; gap:8px; margin-top: 17px; color: #789182; font-size: 12px; font-weight: 600; }
+    .board-foot svg { width: 15px; height: 15px; }
+    .control-card { padding: 29px; }
+    .control-top { display:flex; align-items:center; justify-content: space-between; gap:10px; margin-bottom: 21px; }
+    .round-pill { font-size: 12px; font-weight: 900; color: #3d7957; background: #e8f5e3; padding: 9px 12px; border-radius: 999px; }
+    .field { margin-bottom: 25px; }
+    .field-label { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 13px; font-weight: 900; color: #3a5748; margin-bottom: 12px; }
+    .field-sub { font-size: 11px; font-weight: 700; color: #9bafa0; }
+    .mode-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .mode-btn { cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px; background: #f5f8f4; border: 2px solid transparent; border-radius: 16px; padding: 15px 4px 13px; color: #627b68; transition: background .2s,border-color .2s,transform .2s; }
+    .mode-btn:hover:enabled { transform: translateY(-2px); background: #ebf3e8; }
+    .mode-btn[aria-pressed="true"] { background: #e6f2de; border-color: #74a978; color: #285b43; box-shadow: 0 4px 0 rgba(75,128,78,.1); }
+    .mode-btn:disabled { opacity:.55; }
+    .mode-main { font-size: 20px; font-weight: 950; letter-spacing: -.05em; }
+    .mode-caption { font-size: 11px; font-weight: 750; }
+    .speed-options { display: flex; gap: 8px; padding: 5px; border-radius: 14px; background: #f4f7f3; }
+    .speed-btn { flex:1; border: 0; border-radius: 10px; padding: 10px 7px; color: #74897a; background: transparent; font-size: 13px; font-weight: 850; cursor: pointer; }
+    .speed-btn[aria-pressed="true"] { color: #2d6247; background: white; box-shadow: 0 2px 8px rgba(45,76,52,.09); }
+    .speed-btn:disabled { opacity:.55; }
+    .result-panel { background: #f4f8f0; border: 1px solid #e2ecda; border-radius: 20px; padding: 20px 21px 18px; display:flex; justify-content:space-between; align-items:center; gap: 12px; min-height: 114px; margin-top: -3px; margin-bottom: 18px; }
+    .result-title { font-size: 12px; font-weight: 800; color: #6e8a73; margin: 0 0 7px; }
+    .result-description { color: #789382; font-size: 13px; font-weight: 700; line-height:1.6; margin: 0; }
+    .result-code { color: #b2c7b2; font-weight: 950; font-size: clamp(34px,4vw,51px); letter-spacing: -.08em; line-height: 1; font-variant-numeric: tabular-nums; white-space:nowrap; }
+    .result-panel.has-result { background: linear-gradient(117deg, #e6f5cc, #eef8e9); border-color: #cce8b9; }
+    .result-panel.has-result .result-code { color: #2f7350; }
+    .result-panel.is-rolling .result-code { font-size: 30px; color: #64a175; }
+    .play-button { width:100%; border: 0; border-radius: 17px; min-height: 65px; display:flex; justify-content:center; align-items:center; gap:11px; background:#245c46; color:white; cursor:pointer; font-size: 18px; font-weight: 900; letter-spacing: .015em; box-shadow: 0 6px 0 #163e30, 0 11px 22px rgba(28,91,65,.15); transition: transform .15s,background .15s,box-shadow .15s; }
+    .play-button:hover:enabled { background: #317658; transform: translateY(-1px); }
+    .play-button:active:enabled { transform: translateY(4px); box-shadow: 0 2px 0 #163e30; }
+    .play-button:disabled { opacity: .76; }
+    .play-button svg { width:22px; height:22px; }
+    .secondary-row { margin-top:17px; display:flex; align-items:center; justify-content:center; gap: 13px; }
+    .text-button { border:0; background:transparent; color:#6b8875; font-size:12px; font-weight:850; padding: 8px; cursor:pointer; display:inline-flex;align-items:center;gap:6px; }
+    .text-button:hover:enabled { color: #2a6449; }
+    .text-button:disabled { opacity:.4; }
+    .text-button svg { width: 14px; height:14px; }
+    .shortcut { color:#a1b3a5; font-size:11px; font-weight:700; }
+    .history-card { margin-top: 17px; padding: 22px 25px 23px; border-radius: 22px; background: rgba(255,255,255,.61); border: 1px solid rgba(255,255,255,.87); }
+    .history-title { display:flex;align-items:center;justify-content:space-between; gap:8px; font-size: 12px; font-weight:850; color:#5b7c69; margin-bottom:12px; }
+    .history-list { display:flex;flex-wrap:wrap; gap:8px; min-height:34px; align-items:center; }
+    .history-pill { background:#fff;border:1px solid #d8e9d8; border-radius: 11px; padding:8px 12px; font-size: 13px; color: #3b7957; font-weight:900; }
+    .history-empty { font-size:12px; color:#96ac99; line-height:1.6; }
+    .bottom-note { max-width:800px; margin: 25px auto 29px; text-align:center; color:#788e7c; font-size:12px; line-height: 1.9; }
+    .bottom-note strong { color: #54755e; }
+    .page-footer { padding: 0 0 26px; font-size:11px; color:#9db2a2; text-align:center; font-weight:750; letter-spacing:.05em; }
+    @media(max-width: 880px) { .workspace { grid-template-columns: minmax(0,1fr); } .hero { padding-top: 31px; } .control-card { padding: 25px; } .board-grid { max-width:570px; } .board-card { padding:24px; } .result-code { font-size:48px; } }
+    @media(max-width: 480px) { .site-shell { width: min(100% - 26px, 450px); } .topbar { padding-top:18px; } .brand-mark { width:40px; height:40px; } .brand-name { font-size:15px; } .top-action { padding: 11px; font-size: 12px; } .top-action span { display:none; } .hero { padding: 27px 3px 22px; } h1 { font-size: 32px; margin-top:13px; } .hero-desc { font-size: 13px; } .workspace { gap:14px; } .board-card { padding: 18px 14px 19px; border-radius: 23px; } .board-header { margin:0 3px 16px; } h2 { font-size:16px; } .board-counter { font-size:11px; padding:8px; } .board-stage { padding:17px 13px 18px 7px; border-radius:18px; } .board-grid { --cell-gap: 6px; grid-template-columns: 19px repeat(var(--count),minmax(0,1fr)); } .tile { border-radius:10px; font-size: clamp(15px, 4.8vw, 23px); } .tile::after { inset:4px; border-radius:7px; } .tile.is-selected::before { top:3px;right:4px;font-size:9px; } .axis-label { font-size:12px; } .axis-label.row-axis { font-size:11px; } .control-card { padding:22px 19px; border-radius:23px; } .mode-btn { padding: 13px 4px 11px; } .mode-main { font-size:19px; } .mode-caption { font-size:10px; } .field { margin-bottom:21px; } .history-card { margin-top:14px;padding:20px; } .bottom-note { margin:20px 7px 23px;font-size:11px; } }
+
+    [hidden] { display: none !important; }
+    .app-switch { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin: -2px 0 23px; }
+    .switch-tabs { display:inline-flex; flex-wrap:wrap; gap:5px; padding:5px; border:1px solid #dceadd; border-radius:17px; background:rgba(255,255,255,.8); }
+    .switch-tab { padding:12px 19px; border:0; border-radius:13px; background:transparent; font-size:14px; font-weight:900; color:#668672; cursor:pointer; }
+    .switch-tab[aria-selected="true"] { color:#fff; background:#276c55; box-shadow:0 4px 10px rgba(39,108,85,.18); }
+    .coming-tag { font-size:12px; font-weight:800; color:#779287; background:#e4efe4; border-radius:999px; padding:9px 13px; }
+    .role-layout { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(270px,.7fr); align-items:start; gap:20px; }
+    .role-primary, .role-aside { border-radius:28px; background:rgba(255,255,255,.94); box-shadow:var(--shadow); border:1px solid rgba(255,255,255,.95); padding:30px; }
+    .role-primary { min-height:455px; }
+    .role-overline { color:#6e9878; letter-spacing:.12em; font-size:12px; font-weight:950; }
+    .role-heading { margin:7px 0 10px; font-size:clamp(25px,3vw,35px); line-height:1.34; font-weight:950; letter-spacing:-.045em; }
+    .role-description { line-height:1.8; color:#668275; font-size:14px; margin:0 0 23px; }
+    .role-form-row { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-bottom:12px; }
+    .role-field { display:flex;flex-direction:column;gap:8px;font-size:13px;font-weight:900;color:#46654f; }
+    .role-input { min-width:0; min-height:48px; padding:10px 13px; background:#f5f9f3; border:1px solid #cfe0ce; border-radius:12px; outline-offset:3px; color:#285b40; font-weight:850; font-size:15px; }
+    .role-notice { border-radius:16px; background:#f0f7e7; border:1px solid #e2efd6; padding:15px 17px; margin:16px 0 22px; line-height:1.8; font-size:13px; color:#507257; }
+    .role-primary-button { width:100%; border:0; border-radius:16px; padding:18px 15px; min-height:62px; background:#276c55; box-shadow:0 5px 0 #164534; color:white; font-size:17px; font-weight:950; cursor:pointer; }
+    .role-primary-button:active { transform:translateY(3px); box-shadow:0 2px 0 #164534; }
+    .role-minor-button { display:block;margin:16px auto 0;padding:11px 14px;color:#6d8778;border:0;background:none;font-size:13px;font-weight:800;cursor:pointer; }
+    .role-progress { display:flex; gap:8px; align-items:center; margin:12px 0 23px; font-size:13px; font-weight:900; color:#6c8a76; }
+    .role-progress-bar { flex:1; background:#e6eee4; height:8px; border-radius:999px; overflow:hidden; }
+    .role-progress-fill { height:100%; background:#7cb46c; width:0; transition:width .3s; }
+    .role-privacy-box { min-height:195px; display:flex; flex-direction:column; gap:14px;align-items:center;justify-content:center; text-align:center; border:2px dashed #cfe1d3; background:#f6faf3; border-radius:22px; margin:20px 0; padding:24px; }
+    .role-privacy-symbol { width:70px;height:70px;border-radius:23px;background:#e2f1cc;color:#3b8456;display:grid;place-items:center;font-size:38px; }
+    .role-privacy-box strong { font-size:20px; }
+    .role-privacy-box p { max-width:380px;margin:0;font-size:13px;color:#7a9381;line-height:1.7; }
+    .identity-card { border-radius:23px;background:linear-gradient(155deg,#eaf8df,#f8fbf3);border:2px solid #bfdcac;padding:30px 15px;min-height:240px;display:flex; flex-direction:column;align-items:center;justify-content:center; gap:10px;text-align:center;margin:15px 0 24px;animation:card-pop .28s ease-out; }
+    .identity-card.is-chameleon { background:linear-gradient(145deg,#f9eee3,#fff7ed);border-color:#edceb1; }
+    .identity-icon { font-size:46px; }
+    .identity-title { font-size:clamp(25px,4vw,34px);font-weight:950; }
+    .identity-coordinate { font-size:clamp(42px,6vw,64px);font-weight:950;color:#2c7750;letter-spacing:-.08em;line-height:1.25; }
+    .identity-card.is-chameleon .identity-coordinate { color:#b68158; }
+    .identity-help { color:#63836c;font-size:13px;line-height:1.75;max-width:400px; }
+    .role-completed { text-align:center; display:flex;flex-direction:column;align-items:center;gap:13px; padding:29px 3px 17px; }
+    .role-completed-icon { font-size:66px; }
+    .role-completed h2 { font-size:clamp(26px,3.8vw,40px);line-height:1.45;margin:0; }
+    .role-completed p { color:#6d8b78;font-size:14px;line-height:1.8;margin:0 0 16px; }
+    .aside-item { display:flex;gap:11px;align-items:flex-start;padding:16px 0;border-bottom:1px solid #e7efe5; }
+    .aside-item:last-child { border-bottom:0; }
+    .aside-count { flex:0 0 29px;width:29px;height:29px;display:grid;place-items:center;border-radius:10px;background:#e4f2d4;color:#527d53;font-size:12px;font-weight:950; }
+    .aside-item strong { font-size:14px; }
+    .aside-item p { font-size:12px;color:#779083;line-height:1.7;margin:4px 0 0; }
+    .role-note { font-size:12px;line-height:1.8;color:#779186;margin-top:23px; }
+    @keyframes card-pop { from { transform:translateY(7px) scale(.97);opacity:.3; } to { transform:translateY(0) scale(1);opacity:1; } }
+    @media (max-width:880px) { .role-layout { grid-template-columns:1fr; } .role-aside { padding:23px 26px; } .role-primary { min-height:0; } }
+    @media (max-width:520px) { .role-form-row { grid-template-columns:1fr 1fr; } .role-form-row .role-field:first-child { grid-column:1 / -1; } .role-primary,.role-aside { padding:23px 19px;border-radius:23px; } .switch-tabs { width:100%; } .switch-tab { flex:1; padding:12px 6px; font-size:13px; } .identity-card { min-height:250px;padding:27px 10px; } }
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}}
+  </style>
+  <link rel="stylesheet" href="assets/academy.css">
+</head>
+<body>
+  <div class="site-shell">
+    <header class="topbar">
+      <div class="brand" aria-label="606情報局">
+        <div class="brand-mark" aria-hidden="true"><img src="assets/crest.webp" alt="" width="62" height="62"></div>
+        <div><div class="brand-name">606情報局</div><div class="brand-english">DETECTIVE ACADEMY</div></div>
+      </div>
+      <div class="top-actions">
+        <button type="button" class="top-action" id="soundToggle" aria-label="開啟音效" aria-pressed="false" title="音效開關">
+          <svg aria-hidden="true" id="soundIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m17 9 5 6m0-6-5 6"/></svg><span id="soundText">音效關閉</span>
+        </button>
+        <button type="button" class="top-action" id="fullscreenToggle" aria-label="切換全螢幕" title="切換全螢幕">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m13-5h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3m13-5v3a2 2 0 0 1-2 2h-3"/></svg><span>全螢幕</span>
+        </button>
+      </div>
+    </header>
+
+    <section class="hero" aria-labelledby="heroTitle">
+      <img class="hero-crest" src="assets/crest.webp" alt="" aria-hidden="true" width="148" height="148">
+      <div class="eyebrow"><span class="dot"></span>TOP SECRET · 偵探學院機密任務</div>
+      <h1 id="heroTitle">606情報局：<span class="hero-highlight">誰是局外人？</span></h1>
+      <p class="hero-desc">五位情報員、一名臥底。開啟機密卷宗，分配身分與代號，讓偵探任務正式開始。</p>
+    </section>
+
+    <nav class="app-switch" aria-label="遊玩模式">
+      <div class="switch-tabs" role="tablist" aria-label="遊玩模式">
+        <button class="switch-tab" type="button" role="tab" id="tabPicker" aria-controls="pickerView" aria-selected="false">機密座標抽選</button>
+        <button class="switch-tab" type="button" role="tab" id="tabRole" aria-controls="roleView" aria-selected="true">輪流查看身分</button>
+      </div>
+      <span class="coming-tag">單機偵探任務 · 無須登入</span>
+    </nav>
+    <div id="pickerView" role="tabpanel" aria-labelledby="tabPicker" hidden>
+    <main class="workspace">
+      <section class="board-card" aria-label="隨機選題棋盤">
+        <div class="board-header">
+          <div><div class="section-overline">SECRET CODE BOARD</div><h2>機密情報表｜座標抽選</h2></div>
+          <div class="board-counter" id="boardCounter">3 × 3 · 9 格</div>
+        </div>
+        <div class="board-stage">
+          <div id="boardGrid" class="board-grid" role="grid" aria-label="3 乘 3 機密情報抽選格"></div>
+        </div>
+        <div class="board-foot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 10.5v5m0-7v.2"/></svg><span id="boardFootText">所有座標機率相同 · 請勿讓臥底看見公開抽選結果</span></div>
+      </section>
+
+      <div>
+        <section class="control-card" aria-label="抽題設定與操作">
+          <div class="control-top"><div><div class="section-overline">MISSION CONTROL</div><h2>機密抽選設定</h2></div><div class="round-pill" id="roundNumber">第 01 輪</div></div>
+          <div class="field"><div class="field-label"><span>宮格大小</span><span class="field-sub">選擇情報表宮格</span></div>
+            <div class="mode-options" role="group" aria-label="宮格大小">
+              <button class="mode-btn" type="button" data-size="3" aria-pressed="true"><span class="mode-main">3 × 3</span><span class="mode-caption">9 個格子</span></button>
+              <button class="mode-btn" type="button" data-size="4" aria-pressed="false"><span class="mode-main">4 × 4</span><span class="mode-caption">16 個格子</span></button>
+              <button class="mode-btn" type="button" data-size="5" aria-pressed="false"><span class="mode-main">5 × 5</span><span class="mode-caption">25 個格子</span></button>
+            </div>
+          </div>
+          <div class="field"><div class="field-label"><span>閃爍節奏</span><span class="field-sub">控制動畫時間</span></div>
+            <div class="speed-options" role="group" aria-label="閃爍節奏">
+              <button type="button" class="speed-btn" data-speed="fast" aria-pressed="false">快速</button>
+              <button type="button" class="speed-btn" data-speed="normal" aria-pressed="true">標準</button>
+              <button type="button" class="speed-btn" data-speed="slow" aria-pressed="false">慢速</button>
+            </div>
+          </div>
+          <div class="result-panel" id="resultPanel" aria-label="目前抽題結果">
+            <div><p class="result-title" id="resultTitle">等待抽題</p><p class="result-description" id="resultDescription">準備好就開始抽選。</p></div>
+            <div class="result-code" id="resultCode" aria-live="polite" aria-atomic="true">—</div>
+          </div>
+          <button id="drawButton" type="button" class="play-button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 5 11 7-11 7V5Z" fill="currentColor" stroke="none"/></svg><span id="drawButtonText">開始抽題</span></button>
+          <div class="secondary-row"><button id="clearButton" class="text-button" type="button" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg>清除目前結果</button><span class="shortcut">空白鍵也能抽題</span></div>
+        </section>
+        <section class="history-card" aria-label="近期抽題紀錄"><div class="history-title"><span>最近抽到的格子</span><span id="historyCount">0 筆</span></div><div class="history-list" id="historyList"><span class="history-empty">尚未抽選機密座標。</span></div></section>
+      </div>
+    </main>
+
+    <p class="bottom-note"><strong>保密提醒：</strong>此模式會公開所抽中的座標；正式遊戲請使用「輪流查看身分」，不要讓臥底看到這個畫面。</p>
+
+    </div><!-- pickerView -->
+    <section id="roleView" role="tabpanel" aria-labelledby="tabRole">
+      <div class="role-layout">
+        <div class="role-primary">
+          <div id="roleSetupView">
+            <div class="dossier-stamp" aria-hidden="true">機密任務 · CONFIDENTIAL</div>
+            <div class="role-overline">CLASSIFIED DOSSIER · 606情報局</div>
+            <h2 class="role-heading">機密任務卷宗 <span class="dossier-no">MISSION 001</span></h2>
+            <p class="role-description">情報員集合！設定本輪人數與情報表大小，輪流查看私人身分卡，找出混入隊伍的局外人。</p>
+            <div class="role-form-row">
+              <label class="role-field" for="rolePlayerCount">場上玩家人數<input class="role-input" id="rolePlayerCount" type="number" min="3" max="40" step="1" value="6" inputmode="numeric"></label>
+              <label class="role-field" for="roleChameleonCount">臥底人數<select class="role-input" id="roleChameleonCount"><option value="1">1 人</option><option value="2">2 人</option><option value="3">3 人</option></select></label>
+              <label class="role-field" for="roleBoardSize">答案卡宮格<select class="role-input" id="roleBoardSize"><option value="3" selected>3 × 3</option><option value="4">4 × 4</option><option value="5">5 × 5</option></select></label>
+            </div>
+            <div class="role-notice">五位情報員共享同一機密座標，臥底不知道真正代號。請搭配事先準備好的九宮格情報表確認詞彙；目前版本不儲存九個詞彙。</div>
+            <button type="button" class="role-primary-button" id="roleStartButton">啟動機密任務・分配身分</button>
+          </div>
+          <div id="roleReadyView" hidden>
+            <div class="role-overline">IDENTITY VERIFICATION · 機密身分確認</div>
+            <h2 class="role-heading">等待 <span id="roleReadyPlayer">玩家 01</span> 查看情報</h2>
+            <div class="role-progress"><span id="roleReadyProgress">0 / 6 已確認</span><div class="role-progress-bar"><div id="roleProgressFill" class="role-progress-fill"></div></div></div>
+            <div class="role-privacy-box"><span class="role-privacy-symbol" aria-hidden="true">🔒</span><strong>請先確認只有自己能看到螢幕</strong><p>上一位玩家的身分已遮蔽。準備好後，再點下方按鈕抽取屬於你的卡片。</p></div>
+            <button type="button" class="role-primary-button" id="roleRevealButton">抽取並查看我的身分卡</button>
+            <button type="button" class="role-minor-button" id="roleAbortButton">中止本輪，返回設定</button>
+          </div>
+          <div id="roleRevealView" hidden>
+            <div class="role-overline">FOR YOUR EYES ONLY · 僅限本人查看</div>
+            <h2 class="role-heading"><span id="roleRevealPlayer">玩家 01</span> 的身分卡</h2>
+            <p class="role-description">請自己查看，注意不要讓其他玩家看到。</p>
+            <div class="identity-card" id="roleIdentityCard" aria-live="polite">
+              <span id="roleIdentityIcon" class="identity-icon" aria-hidden="true"></span>
+              <div id="roleIdentityTitle" class="identity-title"></div>
+              <div id="roleIdentityCoordinate" class="identity-coordinate"></div>
+              <div id="roleIdentityHelp" class="identity-help"></div>
+            </div>
+            <button type="button" class="role-primary-button" id="roleNextButton">隱藏身分，交給下一位</button>
+            <p class="role-note">按下按鈕後就會離開本張身分卡，避免下一位玩家看到你的身分。</p>
+          </div>
+          <div id="roleCompleteView" hidden>
+            <div class="role-completed"><div class="role-completed-icon" aria-hidden="true">🎉</div><div class="role-overline">MISSION READY · 任務啟動</div><h2>所有情報身分已確認<br>機密任務開始！</h2><p>所有玩家已完成身分確認。情報員依照機密代號提出線索，臥底則需觀察提示，設法融入情報局。</p></div>
+            <button type="button" class="role-primary-button" id="roleRestartButton">建立下一輪機密任務</button>
+            <p class="role-note">為避免洩漏身分，本頁不會公布本輪答案、抽中座標或玩家身分清單。</p>
+          </div>
+        </div>
+        <aside class="role-aside" aria-label="玩法步驟">
+          <div class="role-overline">MISSION BRIEFING</div><h2>情報局任務流程</h2>
+          <div class="aside-item"><span class="aside-count">01</span><div><strong>建立機密代號</strong><p>系統暗中抽取一個座標，請搭配對應情報表使用；這一輪的秘密不會變動。</p></div></div>
+          <div class="aside-item"><span class="aside-count">02</span><div><strong>輪流確認情報員或臥底</strong><p>情報員知道秘密座標，臥底不知道；查看後務必先隱藏身分。</p></div></div>
+          <div class="aside-item"><span class="aside-count">03</span><div><strong>依序發言、口頭推理</strong><p>場上玩家提供詞彙線索，台下調查小隊口頭討論、以紙條投票。</p></div></div>
+          <div class="role-notice">本版僅支援單機輪流查看身分。QR Code 多人連線與數位討論功能均未啟用。</div>
+        </aside>
+      </div>
+    </section>
+    <footer class="page-footer">606 INTELLIGENCE BUREAU ✦ 單機任務，無須登入或連線</footer>
+  </div>
+  <script>
+    'use strict';
+    (() => {
+      const letters = 'ABCDE';
+      const durations = { fast: 1550, normal: 2750, slow: 4200 };
+      const state = { size: 3, speed: 'normal', running: false, selected: -1, flashing: -1, draws: 0, history: [], sound: false, timer: null, runId: 0, context: null };
+      const $ = id => document.getElementById(id);
+      const board = $('boardGrid');
+      const drawButton = $('drawButton');
+      const sizeButtons = [...document.querySelectorAll('.mode-btn')];
+      const speedButtons = [...document.querySelectorAll('.speed-btn')];
+
+      // 拒絕取樣，避免整數取餘數的分布偏差。若無加密亂數介面則退回一般亂數。
+      function randomInt(count) {
+        if (count < 1) return 0;
+        if (globalThis.crypto && typeof crypto.getRandomValues === 'function') {
+          const limit = 4294967296 - (4294967296 % count);
+          const arr = new Uint32Array(1);
+          do { crypto.getRandomValues(arr); } while (arr[0] >= limit);
+          return arr[0] % count;
+        }
+        return Math.floor(Math.random() * count);
+      }
+      function coord(index) { return letters[index % state.size] + (Math.floor(index / state.size) + 1); }
+      function formatRound(n) { return String(n).padStart(2, '0'); }
+      function renderBoard() {
+        board.style.setProperty('--count', state.size);
+        board.setAttribute('aria-label', `${state.size} 乘 ${state.size} 隨機選題格`);
+        const frag = document.createDocumentFragment();
+        const corner = document.createElement('div'); corner.className = 'corner'; corner.setAttribute('aria-hidden', 'true'); frag.append(corner);
+        for (let c = 0; c < state.size; c++) {
+          const label = document.createElement('div'); label.className = 'axis-label'; label.textContent = letters[c]; label.setAttribute('aria-hidden', 'true'); frag.append(label);
+        }
+        for (let r = 0; r < state.size; r++) {
+          const rowLabel = document.createElement('div'); rowLabel.className = 'axis-label row-axis'; rowLabel.textContent = String(r + 1); rowLabel.setAttribute('aria-hidden', 'true'); frag.append(rowLabel);
+          for (let c = 0; c < state.size; c++) {
+            const cell = document.createElement('div'); cell.className = 'tile'; cell.dataset.index = String(r * state.size + c); cell.setAttribute('role', 'gridcell'); cell.textContent = `${letters[c]}${r + 1}`; frag.append(cell);
+          }
+        }
+        board.replaceChildren(frag);
+        $('boardCounter').textContent = `${state.size} × ${state.size} · ${state.size ** 2} 格`;
+      }
+      function highlight(index, className) {
+        for (const tile of board.querySelectorAll('.tile')) {
+          tile.classList.toggle('is-flashing', className === 'is-flashing' && Number(tile.dataset.index) === index);
+          tile.classList.toggle('is-selected', className === 'is-selected' && Number(tile.dataset.index) === index);
+          tile.setAttribute('aria-selected', String(className === 'is-selected' && Number(tile.dataset.index) === index));
+        }
+      }
+      function updateControls() {
+        sizeButtons.forEach(b => { b.setAttribute('aria-pressed', String(Number(b.dataset.size) === state.size)); b.disabled = state.running; });
+        speedButtons.forEach(b => { b.setAttribute('aria-pressed', String(b.dataset.speed === state.speed)); b.disabled = state.running; });
+        drawButton.disabled = state.running;
+        $('clearButton').disabled = state.running || state.selected < 0;
+        $('roundNumber').textContent = `第 ${formatRound(state.running ? state.draws + 1 : Math.max(1, state.draws))} 輪`;
+        $('drawButtonText').textContent = state.running ? '正在選題…' : (state.draws ? '再抽一次' : '開始抽題');
+      }
+      function updateHistory() {
+        $('historyCount').textContent = `${state.history.length} 筆`;
+        const list = $('historyList');
+        if (!state.history.length) {
+          const empty = document.createElement('span'); empty.className = 'history-empty'; empty.textContent = '尚未抽選機密座標。'; list.replaceChildren(empty); return;
+        }
+        const frag = document.createDocumentFragment();
+        state.history.forEach(item => {
+          const el = document.createElement('span'); el.className = 'history-pill'; el.textContent = item; frag.appendChild(el);
+        });
+        list.replaceChildren(frag);
+      }
+      function clearResult() {
+        if (state.running) return;
+        state.selected = -1;
+        highlight(-1, '');
+        $('resultPanel').classList.remove('has-result', 'is-rolling');
+        $('resultTitle').textContent = '等待抽題';
+        $('resultDescription').textContent = '準備好就開始抽選。';
+        $('resultCode').textContent = '—';
+        $('boardFootText').textContent = '每格機率相同 · 這個模式會公開座標';
+        updateControls();
+      }
+      function playTone(frequency, duration = .04, volume = .02) {
+        if (!state.sound) return;
+        try {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (!AudioCtx) return;
+          if (!state.context) state.context = new AudioCtx();
+          if (state.context.state === 'suspended') state.context.resume().catch(() => {});
+          const t = state.context.currentTime;
+          const oscillator = state.context.createOscillator();
+          const gain = state.context.createGain();
+          oscillator.type = 'sine'; oscillator.frequency.setValueAtTime(frequency, t);
+          gain.gain.setValueAtTime(volume, t); gain.gain.exponentialRampToValueAtTime(.001, t + duration);
+          oscillator.connect(gain).connect(state.context.destination);
+          oscillator.start(t); oscillator.stop(t + duration + .008);
+        } catch { /* 無音效權限也不影響抽題 */ }
+      }
+      function finish(index, runId) {
+        if (runId !== state.runId) return;
+        clearTimeout(state.timer);
+        state.timer = null; state.running = false; state.flashing = -1; state.selected = index;
+        state.draws++;
+        const answer = coord(index);
+        highlight(index, 'is-selected');
+        $('resultPanel').classList.remove('is-rolling'); $('resultPanel').classList.add('has-result');
+        $('resultTitle').textContent = '本輪抽選座標';
+        $('resultDescription').textContent = '請對照實體情報表確認詞彙';
+        $('resultCode').textContent = answer;
+        $('boardFootText').textContent = `已選出 ${answer} · 點擊「再抽一次」繼續`;
+        state.history.unshift(answer);
+        state.history = state.history.slice(0, 8);
+        playTone(660, .16, .035);
+        updateHistory(); updateControls();
+      }
+      function draw() {
+        if (state.running) return;
+        state.running = true; state.selected = -1;
+        const runId = ++state.runId;
+        const finalIndex = randomInt(state.size * state.size); // 先公平決定最終結果，動畫只負責視覺呈現。
+        const duration = durations[state.speed];
+        const started = performance.now();
+        let last = -1;
+        $('resultPanel').classList.remove('has-result'); $('resultPanel').classList.add('is-rolling');
+        $('resultTitle').textContent = '正在隨機選題'; $('resultDescription').textContent = '亮點會停在其中一格…'; $('resultCode').textContent = '···';
+        $('boardFootText').textContent = '正在抽取這一輪的機密座標…';
+        updateControls();
+        const prefersReducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReducedMotion) { state.timer = setTimeout(() => finish(finalIndex, runId), 230); return; }
+        function tick() {
+          if (runId !== state.runId) return;
+          const progress = Math.min((performance.now() - started) / duration, 1);
+          if (progress >= 1) { finish(finalIndex, runId); return; }
+          let next = randomInt(state.size * state.size);
+          if (next === last && state.size > 1) next = (next + 1 + randomInt(state.size * state.size - 1)) % (state.size * state.size);
+          last = next;
+          highlight(next, 'is-flashing');
+          if (progress > .7 || randomInt(3) === 0) playTone(300 + Math.round(progress * 310), .025, .012);
+          const delay = 58 + Math.round(185 * progress * progress);
+          state.timer = setTimeout(tick, delay);
+        }
+        tick();
+      }
+      sizeButtons.forEach(button => button.addEventListener('click', () => {
+        if (state.running) return;
+        state.size = Number(button.dataset.size); state.history = []; state.draws = 0;
+        renderBoard(); updateHistory(); clearResult();
+      }));
+      speedButtons.forEach(button => button.addEventListener('click', () => {
+        if (state.running) return;
+        state.speed = button.dataset.speed; updateControls();
+      }));
+      drawButton.addEventListener('click', draw);
+      $('clearButton').addEventListener('click', clearResult);
+      $('soundToggle').addEventListener('click', () => {
+        state.sound = !state.sound;
+        const btn = $('soundToggle'); btn.setAttribute('aria-pressed', String(state.sound));
+        btn.setAttribute('aria-label', state.sound ? '關閉音效' : '開啟音效');
+        $('soundText').textContent = state.sound ? '音效開啟' : '音效關閉';
+        $('soundIcon').innerHTML = state.sound
+          ? '<path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15 9a4 4 0 0 1 0 6m3-9a8 8 0 0 1 0 12"/>'
+          : '<path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m17 9 5 6m0-6-5 6"/>';
+        if (state.sound) playTone(550,.08,.015);
+      });
+      $('fullscreenToggle').addEventListener('click', async () => {
+        try {
+          if (!document.fullscreenElement) await document.documentElement.requestFullscreen();
+          else await document.exitFullscreen();
+        } catch {
+          // 某些行動瀏覽器不支援全螢幕；忽略並保持其他功能可用。
+        }
+      });
+      document.addEventListener('keydown', event => {
+        if (event.code !== 'Space' || event.repeat || event.ctrlKey || event.altKey || event.metaKey || state.running || $('pickerView').hidden) return;
+        const target = event.target;
+        if (target instanceof Element && (target.closest('button, input, select, textarea, a') || target.isContentEditable)) return;
+        event.preventDefault(); draw();
+      });
+      // 單機輪流抽身分：一輪只抽一次共同座標。所有秘密僅存在此頁記憶體中。
+      const roleState = { stage: 'setup', deck: [], current: 0, secret: -1, size: 3, total: 0, chameleons: 1 };
+      const roleStages = ['roleSetupView', 'roleReadyView', 'roleRevealView', 'roleCompleteView'];
+      function eraseRoleCard() {
+        $('roleIdentityIcon').textContent = '';
+        $('roleIdentityTitle').textContent = '';
+        $('roleIdentityCoordinate').textContent = '';
+        $('roleIdentityHelp').textContent = '';
+        $('roleIdentityCard').classList.remove('is-chameleon');
+      }
+      function showRoleStage(stage) {
+        roleStages.forEach((id, index) => { $(id).hidden = ['setup', 'ready', 'reveal', 'complete'][index] !== stage; });
+        roleState.stage = stage;
+        if (stage === 'ready') {
+          $('roleReadyPlayer').textContent = `玩家 ${formatRound(roleState.current + 1)}`;
+          $('roleReadyProgress').textContent = `${roleState.current} / ${roleState.total} 已確認`;
+          $('roleProgressFill').style.width = `${(roleState.current / roleState.total) * 100}%`;
+        }
+      }
+      function resetRole() {
+        eraseRoleCard();
+        roleState.deck = []; roleState.secret = -1; roleState.current = 0; roleState.total = 0;
+        showRoleStage('setup');
+      }
+      function shuffleDeck(deck) {
+        for (let i = deck.length - 1; i > 0; i--) {
+          const j = randomInt(i + 1);
+          [deck[i], deck[j]] = [deck[j], deck[i]];
+        }
+        return deck;
+      }
+      function startRoles() {
+        const players = Number($('rolePlayerCount').value);
+        const chameleons = Number($('roleChameleonCount').value);
+        const size = Number($('roleBoardSize').value);
+        if (!Number.isInteger(players) || players < 3 || players > 40) {
+          alert('玩家人數請設定為 3～40 人。'); $('rolePlayerCount').focus(); return;
+        }
+        if (!Number.isInteger(chameleons) || chameleons < 1 || chameleons > 3 || chameleons >= players) {
+          alert('臥底人數必須介於 1～3 人，且少於總玩家人數。'); return;
+        }
+        if (![3,4,5].includes(size)) return;
+        roleState.total = players; roleState.chameleons = chameleons; roleState.size = size; roleState.current = 0;
+        roleState.secret = randomInt(size * size);
+        roleState.deck = shuffleDeck([...Array(chameleons).fill('chameleon'), ...Array(players - chameleons).fill('normal')]);
+        eraseRoleCard();
+        showRoleStage('ready');
+      }
+      function revealRole() {
+        if (roleState.stage !== 'ready' || roleState.current >= roleState.deck.length) return;
+        const isChameleon = roleState.deck[roleState.current] === 'chameleon';
+        $('roleRevealPlayer').textContent = `玩家 ${formatRound(roleState.current + 1)}`;
+        $('roleIdentityIcon').textContent = isChameleon ? '🔍' : '🛡️';
+        $('roleIdentityTitle').textContent = isChameleon ? '你是臥底' : '你是情報員';
+        $('roleIdentityCoordinate').textContent = isChameleon ? '？？？' : letters[roleState.secret % roleState.size] + (Math.floor(roleState.secret / roleState.size) + 1);
+        $('roleIdentityHelp').textContent = isChameleon ? '你不知道真正的機密代號。請根據其他玩家的線索推理，設法提出合理提示。' : '請對照機密情報表找出代號，保密並提供相關線索，不要直接說出答案。';
+        $('roleIdentityCard').classList.toggle('is-chameleon', isChameleon);
+        $('roleNextButton').textContent = roleState.current + 1 === roleState.total ? '確認身分，開始遊戲' : '隱藏身分，交給下一位';
+        showRoleStage('reveal');
+      }
+      function nextRole() {
+        if (roleState.stage !== 'reveal') return;
+        eraseRoleCard(); // 切換頁面前先立即清除所有私人顯示內容。
+        roleState.current++;
+        if (roleState.current >= roleState.total) {
+          // 本輪不保留可供其他玩家讀取的角色陣列與秘密座標。
+          roleState.deck = []; roleState.secret = -1;
+          showRoleStage('complete');
+        } else showRoleStage('ready');
+      }
+      function switchMode(toRole) {
+        if (!toRole && roleState.stage !== 'setup' && roleState.stage !== 'complete') {
+          if (!confirm('目前正在輪流抽身分。切換模式會中止這一輪並清除所有身分，確定切換嗎？')) return;
+          resetRole();
+        }
+        $('pickerView').hidden = toRole;
+        $('roleView').hidden = !toRole;
+        $('tabPicker').setAttribute('aria-selected', String(!toRole));
+        $('tabRole').setAttribute('aria-selected', String(toRole));
+        $('heroTitle').innerHTML = toRole ? '機密任務：<span class="hero-highlight">誰是局外人？</span>' : '機密情報：<span class="hero-highlight">隨機抽選。</span>';
+        document.querySelector('.hero-desc').textContent = toRole ? '一個裝置輪流查看私人身分卡。情報員知道機密座標，臥底只能根據線索推理。' : '隨機抽取情報表座標。注意：這個畫面會公開結果，請勿讓臥底旁觀。';
+        document.querySelector('.eyebrow').lastChild.textContent = toRole ? 'TOP SECRET · 身分確認' : 'TOP SECRET · 公開抽選';
+      }
+      $('tabPicker').addEventListener('click', () => switchMode(false));
+      $('tabRole').addEventListener('click', () => switchMode(true));
+      $('roleStartButton').addEventListener('click', startRoles);
+      $('roleRevealButton').addEventListener('click', revealRole);
+      $('roleNextButton').addEventListener('click', nextRole);
+      $('roleAbortButton').addEventListener('click', () => { if (confirm('中止這一輪？所有尚未查看的身分都會重新抽取。')) resetRole(); });
+      $('roleRestartButton').addEventListener('click', resetRole);
+      // 網頁隱藏、切換分頁時，不讓已揭曉的身分繼續曝露在畫面上。
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden && roleState.stage === 'reveal') {
+          // 身分持有者按下一次「查看」可重新開啟；但畫面切回時先保護私人資訊。
+          eraseRoleCard(); showRoleStage('ready');
+        }
+      });
+      renderBoard(); updateControls(); updateHistory(); switchMode(true);
+    })();
+  </script>
+</body>
+</html>
