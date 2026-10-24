@@ -118,6 +118,7 @@
     .app-switch { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin: -2px 0 23px; }
     .switch-tabs { display:inline-flex; flex-wrap:wrap; gap:5px; padding:5px; border:1px solid #dceadd; border-radius:17px; background:rgba(255,255,255,.8); }
     .switch-tab { padding:12px 19px; border:0; border-radius:13px; background:transparent; font-size:14px; font-weight:900; color:#668672; cursor:pointer; }
+    .switch-tab:is(a) { display:inline-flex;align-items:center;justify-content:center;text-decoration:none; }
     .switch-tab[aria-selected="true"] { color:#fff; background:#276c55; box-shadow:0 4px 10px rgba(39,108,85,.18); }
     .coming-tag { font-size:12px; font-weight:800; color:#779287; background:#e4efe4; border-radius:999px; padding:9px 13px; }
     .role-layout { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(270px,.7fr); align-items:start; gap:20px; }
@@ -200,8 +201,9 @@
     <nav class="app-switch" aria-label="遊玩模式">
       <div class="switch-tabs" aria-label="遊玩模式">
         <button class="switch-tab" type="button" id="tabRole" aria-selected="true">單機模式</button>
+        <a class="switch-tab" href="online.html" role="tab" aria-selected="false">連線模式</a>
       </div>
-      <span class="coming-tag">單機偵探任務 · 無須登入</span>
+      <span class="coming-tag">單機無須登入 · 連線使用 Supabase</span>
     </nav>
     <div id="pickerView" hidden aria-hidden="true">
     <main class="workspace">
