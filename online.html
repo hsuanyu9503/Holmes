@@ -4,14 +4,33 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0a2832">
 <title>606 情報局｜連線任務</title>
-<link rel="stylesheet" href="assets/online.css?v=2.5.2">
+<link rel="stylesheet" href="assets/online.css?v=2.5.3">
+<style id="settings-critical-style">
+/* v2.5.3：設定入口必須能在主樣式檔快取未更新時仍正確顯示 */
+.topbar{position:relative}.top-links{margin-left:auto}
+.settings-shortcut{appearance:none;-webkit-appearance:none;position:static;inset:auto;z-index:auto;box-sizing:border-box;display:inline-flex;flex-shrink:0;align-items:center;justify-content:center;gap:6px;min-height:32px;margin:0;padding:5px 10px;border:1px solid rgba(213,178,117,.52);border-radius:999px;background:rgba(19,54,65,.94);color:#e8d6b4;font-family:inherit;font-size:12px;font-weight:700;line-height:1.3;letter-spacing:.3px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);cursor:pointer;white-space:nowrap;transition:background .16s,border-color .16s}
+.settings-shortcut:hover,.settings-shortcut:focus-visible{background:#24515a;border-color:#efc98f;color:#fff0d2}
+.settings-shortcut:focus-visible{outline:2px solid #f2d194;outline-offset:3px}
+.settings-icon{font-size:14px;line-height:1}.settings-dot{height:7px;width:7px;border-radius:50%;background:#d5a567;flex:none}.settings-dot.configured{background:#82cfaa;box-shadow:0 0 5px #5aaf86aa}
+.settings-dialog{box-sizing:border-box;width:min(520px,calc(100% - 28px));max-height:min(92dvh,750px);overflow:auto;padding:25px;color:#f4ead5;border-radius:20px;border:1px solid #c6a573;background:linear-gradient(155deg,#19434a,#071f2a 88%);box-shadow:0 22px 90px #020b11cf;font:inherit;line-height:1.65}
+.settings-dialog::backdrop{background:rgba(2,10,15,.78);backdrop-filter:blur(4px)}
+.settings-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.settings-header h2{font-family:Georgia,'Noto Serif TC',serif;font-size:25px;margin:4px 0 0;color:#f4dfb7;line-height:1.4}
+.settings-close{height:34px;width:34px;flex:none;border:1px solid #b49a737a;border-radius:10px;background:#244450;color:#e9cfab;font-size:16px;cursor:pointer}
+.settings-intro{margin:10px 0 13px;font-size:13px;color:#c6d2ca}.settings-source{display:inline-flex;padding:5px 10px;border:1px solid #a9ba9c60;border-radius:999px;color:#d8dfcd;background:#35534a55;font-size:12px;margin-bottom:10px}
+.settings-dialog label{display:block;font-size:13px;font-weight:800;color:#e9dabc;margin:11px 0 6px}.settings-dialog input{display:block;width:100%;min-width:0;height:44px;border:1px solid #9a9778aa;border-radius:10px;background:#071f2a;color:#fdf5df;font-size:14px;padding:10px 12px;font-family:inherit}
+.settings-dialog input::placeholder{color:#9badaa}.settings-key-row{display:flex;align-items:stretch;gap:7px}.settings-key-row input{flex:1}.settings-reveal{flex:none;border:1px solid #9a9778aa;border-radius:9px;background:#183e49;color:#eddec0;font-size:12px;padding:6px 10px;cursor:pointer}
+.settings-warning{font-size:12px;line-height:1.7;margin:15px 0 8px;color:#ead1a0;background:#76512c35;border:1px solid #b88e4f5c;border-radius:11px;padding:10px 12px}.settings-warning strong{color:#ffe0b7}.settings-error{color:#ffdad0;background:#74372952;border:1px solid #ce786b8a;border-radius:9px;padding:9px 11px;font-size:12px}
+.settings-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:9px;margin:21px 0 10px}.settings-actions button{font-size:13px;min-height:43px;cursor:pointer}.settings-actions .settings-clear{margin-right:auto}.settings-footnote{font-size:11px;color:#afc0b9;margin:12px 0 0;padding-top:13px;border-top:1px solid #8b997754}
+@media(max-width:800px){.topbar{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:'brand config' 'links links';height:auto;min-height:104px;gap:8px;padding:12px 0}.topbar>.brand{grid-area:brand;min-width:0}.topbar>.top-links{grid-area:links;margin:0;justify-content:flex-end}.topbar>.settings-shortcut{grid-area:config;justify-self:end}}
+@media(max-width:560px){.shell{padding:0 14px}.settings-shortcut{font-size:11px;padding:5px 9px;min-height:31px}.brand{gap:8px}.brand img{width:43px;height:43px}.brand strong{font-size:16px;letter-spacing:2px}.brand small{font-size:9px;letter-spacing:1.3px}.top-links a,.top-links span{font-size:12px;padding:6px 11px}.settings-dialog{padding:19px}.settings-header h2{font-size:22px}.settings-actions{display:grid;grid-template-columns:1fr}.settings-actions button{width:100%}}
+</style>
 </head>
 <body>
 <div class="shell">
-  <button class="settings-shortcut" id="openSupabaseSettings" type="button" aria-haspopup="dialog" aria-controls="supabaseDialog" title="設定 Supabase 連線"><span class="settings-dot" id="settingsDot" aria-hidden="true"></span>⚙ 連線設定</button>
   <header class="topbar">
     <a class="brand" href="index.html"><img src="assets/crest.webp" alt=""><span><strong>606 情報局</strong><small>DETECTIVE ACADEMY</small></span></a>
     <div class="top-links"><a href="index.html">單機模式</a><span aria-current="page">連線模式</span></div>
+    <button class="settings-shortcut" id="openSupabaseSettings" data-always="true" type="button" aria-label="開啟 Supabase 連線設定" aria-haspopup="dialog" aria-controls="supabaseDialog" title="開啟 Supabase 連線設定"><span class="settings-dot" id="settingsDot" aria-hidden="true"></span><span class="settings-icon" aria-hidden="true">⚙</span><span class="settings-label">連線設定</span></button>
   </header>
   <section class="masthead"><span class="eyebrow">SECURE CHANNEL · CLASSIFIED</span><h1>606 情報局 <em>連線任務</em></h1><p>各自查看私人身分卡，分享情報線索，一起找出潛伏其中的局外人。</p></section>
   <div id="alert" class="alert" role="status" hidden></div>
@@ -68,6 +87,91 @@
 </dialog>
 <div id="projection" class="projection" hidden role="dialog" aria-modal="true" aria-label="投影情報卡"><button id="closeProjection" class="projection-close">✕ 離開投影</button><div id="projectionContent" class="projection-body"></div></div>
 <script src="online-config.js"></script>
+<script id="settings-standalone-controller">
+/* v2.5.3：此設定視窗不依賴外部 online.js、Supabase SDK 或登入狀態。 */
+(() => {
+  'use strict';
+  const id = name => document.getElementById(name);
+  const KEY = 'intel606_supabase_public_config_v1';
+  const button = id('openSupabaseSettings');
+  const dialog = id('supabaseDialog');
+  const errorEl = id('settingsError');
+  function normalize(data) {
+    if (!data || typeof data !== 'object') return null;
+    const url = String(data.url || '').trim().replace(/\/$/, '');
+    const publishableKey = String(data.publishableKey || '').trim();
+    if (!/^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(url)) return null;
+    if (/^sb_publishable_[a-z0-9_-]+$/i.test(publishableKey)) return {url,publishableKey};
+    if (/^[a-z0-9_-]+\.[a-z0-9_-]+\.[a-z0-9_-]+$/i.test(publishableKey)) {
+      try {
+        const p = publishableKey.split('.')[1];
+        const payload = JSON.parse(atob(p.replace(/-/g,'+').replace(/_/g,'/') + '='.repeat((4-p.length%4)%4)));
+        if (payload.role === 'anon') return {url,publishableKey};
+      } catch (_) { /* 拒絕無效的 JWT */ }
+    }
+    return null;
+  }
+  function stored() {
+    try {return normalize(JSON.parse(localStorage.getItem(KEY) || 'null'));} catch (_) {return null;}
+  }
+  function config() {return stored() || normalize(window.INTEL606_SUPABASE || {});}
+  function setError(message) {errorEl.textContent=message; errorEl.hidden=!message;}
+  function refreshStatus() {
+    const configured=Boolean(config());
+    id('settingsDot').classList.toggle('configured',configured);
+    button.title=configured?'Supabase 已設定 · 點此檢視或修改':'尚未設定 Supabase · 點此設定';
+  }
+  function open(e) {
+    if(e){e.preventDefault();e.stopImmediatePropagation();}
+    const actual=config();
+    id('supabaseUrl').value=actual?.url || '';
+    id('supabaseKey').value=actual?.publishableKey || '';
+    id('supabaseKey').type='password';
+    id('toggleKeyVisible').textContent='顯示';
+    id('toggleKeyVisible').setAttribute('aria-pressed','false');
+    id('configSource').textContent=actual?'● 已設定 · '+(stored()?'本機設定':'預設檔案'):'○ 尚未設定';
+    setError('');
+    if (!dialog.open) { if (typeof dialog.showModal === 'function') dialog.showModal(); else dialog.setAttribute('open',''); }
+  }
+  function close(e) {
+    if(e){e.preventDefault();e.stopImmediatePropagation();}
+    if (dialog.open) {if(typeof dialog.close === 'function') dialog.close(); else dialog.removeAttribute('open');}
+    button.focus();
+  }
+  function save(e) {
+    e.preventDefault();e.stopImmediatePropagation();
+    const incoming=normalize({url:id('supabaseUrl').value,publishableKey:id('supabaseKey').value});
+    if (!incoming) {setError('請填入有效的 Supabase Project URL，以及公開的 publishable key 或 anon key；不可使用 secret／service_role 金鑰。');return;}
+    const previous=config();
+    try {
+      localStorage.setItem(KEY, JSON.stringify(incoming));
+      if (!previous || previous.url!==incoming.url || previous.publishableKey!==incoming.publishableKey) localStorage.removeItem('intel606_last_room');
+    } catch (_) {setError('無法儲存設定，請確認瀏覽器允許本機儲存。');return;}
+    location.reload();
+  }
+  function clear(e) {
+    e.preventDefault();e.stopImmediatePropagation();
+    if (!stored()) {setError('目前沒有另外儲存在這台裝置的連線設定。');return;}
+    if (!confirm('確定清除這台裝置的 Supabase 設定？若部署檔有預設設定，清除後會改用預設值。'))return;
+    try {localStorage.removeItem(KEY);localStorage.removeItem('intel606_last_room');}
+    catch (_) {setError('無法清除設定，請檢查瀏覽器儲存權限。');return;}
+    location.reload();
+  }
+  button.addEventListener('click',open,true);
+  id('closeSupabaseSettings').addEventListener('click',close,true);
+  id('supabaseForm').addEventListener('submit',save,true);
+  id('resetSupabaseSettings').addEventListener('click',clear,true);
+  id('toggleKeyVisible').addEventListener('click',e=>{
+    e.preventDefault();e.stopImmediatePropagation();
+    const input=id('supabaseKey');const revealed=input.type==='password';
+    input.type=revealed?'text':'password';e.currentTarget.textContent=revealed?'隱藏':'顯示';
+    e.currentTarget.setAttribute('aria-pressed',String(revealed));
+  },true);
+  dialog.addEventListener('click',e=>{if(e.target===dialog)close(e);},true);
+  refreshStatus();
+  window.INTEL606_SETTINGS_UI={refreshStatus};
+})();
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="assets/online.js?v=2.5.2" defer></script>
+<script src="assets/online.js?v=2.5.3" defer></script>
 </body></html>
