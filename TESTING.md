@@ -1,3 +1,15 @@
+# 606 情報局｜v2.5.4 設定載入修復檢查
+
+- 核對 v2.5.0／v2.5.1 的 `assets/online.js` 含舊文案「請先編輯線上部署檔」，而 v2.5.3／v2.5.4 不含該文案，確認新舊 JavaScript 混用的可能性。
+- `online.html` 已改為參照**版本化實體檔名** `assets/online-v2.5.4.js`、`assets/online-v2.5.4.css`，而非舊資產路徑加 query string。
+- `node --check assets/online-v2.5.4.js` 檢查通過。
+- Chromium 模擬：無設定時顯示新版設定提示；填入公開 URL 與金鑰後觸發保存；模擬重新載入並保留 localStorage，遊戲程式顯示 configured=true，初始化通過且不再出現舊提示。
+- Chromium 模擬：已存在本機設定時成功解析並與舊檔設定物件橋接，320px／390px 手機版均可點開設定視窗、無版面溢出；禁止儲存 secret key。
+- 測試使用**假的 Supabase SDK 與匿名登入回應**，因此只驗證瀏覽器程式流程，不代表已成功連到正式 Supabase 專案。仍須部署後做匿名登入、RLS、RPC 與跨裝置同步測試。
+- `index.html`、`supabase/` SQL 等檔案與 v2.5.3 保持不變。
+
+---
+
 # 606 情報局｜v2.5.3 測試與驗收紀錄
 
 ## v2.5.3 右上角設定功能的本地測試

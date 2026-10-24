@@ -1,4 +1,31 @@
-# 606 情報局｜連線模式 v2.5.3（網頁內 Supabase 設定）
+# 606 情報局｜連線模式 v2.5.4（已儲存設定卻顯示未設定：修復）
+
+## 這次為何出現錯誤？
+
+若畫面右上角顯示綠點，卻跳出「尚未設定 Supabase：請先編輯線上部署檔 `online-config.js`」，這句文字只存在於 v2.5.0／v2.5.1 的舊 `assets/online.js`，不是 v2.5.3 的提示。表示新版頁面 HTML 與舊版連線 JavaScript 同時被使用，可能是瀏覽器／CDN 快取或未完整部署，**不代表已存設定遺失**。
+
+## v2.5.4 修正
+
+- `online.html` 改用全新檔名 `assets/online-v2.5.4.js` 與 `assets/online-v2.5.4.css`，避免因同名檔案快取混用舊版遊戲程式。
+- 在頁面載入 `online-config.js` 後加入相容性橋接：若瀏覽器已儲存合法的 Supabase Project URL 與公開金鑰，會同步給連線核心的設定物件，保留原 `localStorage` 鍵值與內容。
+- 連線核心依然優先使用使用者透過右上角設定視窗儲存的資料；可選的 `online-config.js` 繼續作為網站預設值。
+- 提示說明明確區別「已輸入設定」與「實際 Supabase 已成功驗證／登入」。頂部右上角小綠點只代表設定已填入，不等於已確認網路連線。
+- 頁面最下方加入 `v2.5.4` 版本字樣，方便核對是否成功部署新版 HTML。
+- **不修改** 原單機 `index.html`、骰子對照／情報卡遊戲規則、Supabase SQL／RLS。**不需要重新執行 SQL**。
+
+## 從 v2.5.3 更新（重要）
+
+1. 解壓完整部署包並上傳至 GitHub Pages 使用的網站資料夾（通常是儲存庫根目錄）。至少要更新 `online.html`、`assets/online-v2.5.4.js`、`assets/online-v2.5.4.css`，且檔案相對路徑一致；可保留原來 `assets/online.js`、`assets/online.css` 不必刪除。
+2. 原本透過右上角儲存的設定會留在**同一網站網址、同一瀏覽器**的 localStorage，通常無須再次輸入。若曾自行修改 `online-config.js` 作為預設值，更新時**保留原檔**，不要被空白範例覆蓋。
+3. 開啟連線模式並捲至頁面底部，確認有 `v2.5.4`；必要時用 Ctrl+Shift+R 強制重新整理。開啟右上角「連線設定」，確認 Project URL 與公開金鑰已存在。
+4. 如果新版不再顯示舊提示、但出現「登入連線身分失敗」，代表已進入下一步的真實 Supabase 登入檢查，請確認專案網址／公開金鑰及 Authentication → Providers 的 Anonymous Sign-ins 是否已啟用。
+5. 如仍看不到 `v2.5.4`，可能 GitHub Pages 尚未指向上傳的資料夾，或網站仍載入舊 `online.html`；檢查部署位置、分支與路徑，再重新整理即可。
+
+**安全提醒：** 只可填入公開用途的 `sb_publishable_...` 或舊版 anon key；絕不可填入 `sb_secret_...`、service_role 或資料庫密碼。
+
+---
+
+# v2.5.3 歷史功能說明
 
 沿用 v2.5.1 已修正的骰子與代號機制，新增網頁右上角的 **⚙ 連線設定**，讓教師可以直接在瀏覽器輸入 Supabase 公開連線資訊，無須自行編輯 JavaScript。原有單機版 `index.html`、骰子邏輯、情報卡資料與 SQL 均未修改。
 
