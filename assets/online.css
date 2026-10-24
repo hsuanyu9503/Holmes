@@ -19,3 +19,71 @@
 .identity-card p,.identity-card .hint{color:#344c4b}
 .identity-card .status-note{color:#f5e4bf}
 .identity-card .status-note strong{color:#f4d08d}
+
+/* v2.5.1｜公開雙色骰、私人 18/48 格代號對照表 */
+.die.blue{background:linear-gradient(135deg,#77bad8,#246486);color:#f5fbff;border-color:#91cae0}
+.die.red{background:linear-gradient(135deg,#b87865,#743b40);color:#fff2d8;border-color:#dba596}
+.die small{font-size:11px;letter-spacing:.2px;max-width:135px;line-height:1.4;overflow-wrap:anywhere}
+.dice-result-note{text-align:center}.dice-result-note strong{display:block;font-size:23px;color:#f3ddb5;letter-spacing:.4px;margin-top:4px}
+.code-map-caption{font-size:13px;color:#1d4b53;font-weight:800;margin:16px 0 7px}
+.code-grid{display:grid;grid-template-columns:minmax(31px,.8fr) repeat(var(--columns),minmax(0,1fr));gap:5px;max-width:760px;margin:8px auto 12px}
+.code-corner,.code-axis{display:grid;place-items:center;font-size:12px;font-weight:900;min-width:0;min-height:34px}
+.code-corner{font-size:11px;color:#4b5f5c}.red-axis{border-radius:7px;background:#a85f58;color:#fff8e7}.blue-axis{border-radius:7px;background:#316d90;color:#fff9e5}
+.code-cell{min-width:0;min-height:47px;padding:4px 2px;border-radius:7px}
+.code-cell strong{font-size:clamp(13px,2.3vw,18px);line-height:1.1}
+.code-cell.highlight{border:3px solid #9b5d13;outline:2px solid #e1ab48;outline-offset:1px;background:#fff9d6;box-shadow:0 0 0 2px #fff5c266}
+.map-error{color:#803f30!important;font-weight:800}
+@media(max-width:560px){
+  .code-grid{gap:3px;grid-template-columns:minmax(23px,.7fr) repeat(var(--columns),minmax(0,1fr))}
+  .code-corner,.code-axis{font-size:10px;min-height:26px}.code-corner{font-size:8px}
+  .code-cell{min-height:37px;padding:3px 1px;border-radius:5px}
+  .code-cell strong{font-size:12px}.identity-card{padding:20px 9px}
+  .dice-area{gap:10px}.die{width:105px;height:96px;font-size:43px}.die small{font-size:10px}
+  .dice-result-note strong{font-size:18px}
+}
+
+/* v2.5.2｜右上角輕量入口與 Supabase 設定視窗 */
+.shell{position:relative}
+.settings-shortcut{position:absolute;right:24px;top:8px;z-index:5;display:inline-flex;align-items:center;gap:6px;min-height:26px;padding:3px 9px;border:1px solid #b2986a70;border-radius:999px;background:#102e37d9;color:#dac8a9;font-size:11px;letter-spacing:.3px;font-weight:700;line-height:1.3;box-shadow:none}
+.settings-shortcut:hover{background:#23505b;border-color:#d6b880;color:#fff1d0}
+.settings-dot{height:7px;width:7px;background:#d5a567;border-radius:50%;display:inline-block;flex:none}
+.settings-dot.configured{background:#82cfaa;box-shadow:0 0 5px #5aaf86aa}
+.settings-dialog{box-sizing:border-box;width:min(520px,calc(100% - 28px));max-height:min(92vh,750px);overflow:auto;padding:25px;color:#f4ead5;border-radius:20px;border:1px solid #c6a573;background:linear-gradient(155deg,#19434a,#071f2a 88%);box-shadow:0 22px 90px #020b11cf;font:inherit;line-height:1.65}
+.settings-dialog::backdrop{background:rgba(2,10,15,.78);backdrop-filter:blur(4px)}
+.settings-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.settings-header h2{font-family:Georgia,'Noto Serif TC',serif;font-size:25px;margin:4px 0 0;color:#f4dfb7;line-height:1.4}
+.settings-close{height:34px;width:34px;flex:none;border:1px solid #b49a737a;border-radius:10px;background:#244450;color:#e9cfab;font-size:16px}
+.settings-intro{margin:10px 0 13px;font-size:13px;color:#c6d2ca}
+.settings-source{display:inline-flex;padding:5px 10px;border:1px solid #a9ba9c60;border-radius:999px;color:#d8dfcd;background:#35534a55;font-size:12px;margin-bottom:10px}
+.settings-dialog label{display:block;font-size:13px;font-weight:800;color:#e9dabc;margin:11px 0 6px}
+.settings-dialog input{display:block;width:100%;min-width:0;height:44px;border:1px solid #9a9778aa;border-radius:10px;background:#071f2a;color:#fdf5df;font-size:14px;padding:10px 12px;font-family:inherit}
+.settings-dialog input::placeholder{color:#9badaa}
+.settings-key-row{display:flex;align-items:stretch;gap:7px}
+.settings-key-row input{flex:1}
+.settings-reveal{flex:none;border:1px solid #9a9778aa;border-radius:9px;background:#183e49;color:#eddec0;font-size:12px;padding:6px 10px}
+.settings-warning{font-size:12px;line-height:1.7;margin:15px 0 8px;color:#ead1a0;background:#76512c35;border:1px solid #b88e4f5c;border-radius:11px;padding:10px 12px}
+.settings-warning strong{color:#ffe0b7}
+.settings-error{color:#ffdad0;background:#74372952;border:1px solid #ce786b8a;border-radius:9px;padding:9px 11px;font-size:12px}
+.settings-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:9px;margin:21px 0 10px}
+.settings-actions button{font-size:13px;min-height:43px}
+.settings-actions .settings-clear{margin-right:auto}
+.settings-footnote{font-size:11px;color:#afc0b9;margin:12px 0 0;padding-top:13px;border-top:1px solid #8b997754}
+@media(max-width:720px){.settings-shortcut{right:13px;top:5px;padding:3px 8px;font-size:10px}.settings-dialog{padding:19px}.settings-header h2{font-size:22px}.settings-actions{display:grid;grid-template-columns:1fr}.settings-actions button{width:100%}}
+
+/* v2.5.3：header 內右上角的設定入口；主樣式與頁內關鍵樣式一致。 */
+.topbar{position:relative}.top-links{margin-left:auto}
+.settings-shortcut{appearance:none;-webkit-appearance:none;position:static;inset:auto;z-index:auto;box-sizing:border-box;display:inline-flex;flex-shrink:0;align-items:center;justify-content:center;gap:6px;min-height:32px;margin:0;padding:5px 10px;border:1px solid rgba(213,178,117,.52);border-radius:999px;background:rgba(19,54,65,.94);color:#e8d6b4;font-family:inherit;font-size:12px;font-weight:700;line-height:1.3;letter-spacing:.3px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);cursor:pointer;white-space:nowrap;transition:background .16s,border-color .16s}
+.settings-shortcut:hover,.settings-shortcut:focus-visible{background:#24515a;border-color:#efc98f;color:#fff0d2}
+.settings-shortcut:focus-visible{outline:2px solid #f2d194;outline-offset:3px}
+.settings-icon{font-size:14px;line-height:1}.settings-dot{height:7px;width:7px;border-radius:50%;background:#d5a567;flex:none}.settings-dot.configured{background:#82cfaa;box-shadow:0 0 5px #5aaf86aa}
+.settings-dialog{box-sizing:border-box;width:min(520px,calc(100% - 28px));max-height:min(92dvh,750px);overflow:auto;padding:25px;color:#f4ead5;border-radius:20px;border:1px solid #c6a573;background:linear-gradient(155deg,#19434a,#071f2a 88%);box-shadow:0 22px 90px #020b11cf;font:inherit;line-height:1.65}
+.settings-dialog::backdrop{background:rgba(2,10,15,.78);backdrop-filter:blur(4px)}
+.settings-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.settings-header h2{font-family:Georgia,'Noto Serif TC',serif;font-size:25px;margin:4px 0 0;color:#f4dfb7;line-height:1.4}
+.settings-close{height:34px;width:34px;flex:none;border:1px solid #b49a737a;border-radius:10px;background:#244450;color:#e9cfab;font-size:16px;cursor:pointer}
+.settings-intro{margin:10px 0 13px;font-size:13px;color:#c6d2ca}.settings-source{display:inline-flex;padding:5px 10px;border:1px solid #a9ba9c60;border-radius:999px;color:#d8dfcd;background:#35534a55;font-size:12px;margin-bottom:10px}
+.settings-dialog label{display:block;font-size:13px;font-weight:800;color:#e9dabc;margin:11px 0 6px}.settings-dialog input{display:block;width:100%;min-width:0;height:44px;border:1px solid #9a9778aa;border-radius:10px;background:#071f2a;color:#fdf5df;font-size:14px;padding:10px 12px;font-family:inherit}
+.settings-dialog input::placeholder{color:#9badaa}.settings-key-row{display:flex;align-items:stretch;gap:7px}.settings-key-row input{flex:1}.settings-reveal{flex:none;border:1px solid #9a9778aa;border-radius:9px;background:#183e49;color:#eddec0;font-size:12px;padding:6px 10px;cursor:pointer}
+.settings-warning{font-size:12px;line-height:1.7;margin:15px 0 8px;color:#ead1a0;background:#76512c35;border:1px solid #b88e4f5c;border-radius:11px;padding:10px 12px}.settings-warning strong{color:#ffe0b7}.settings-error{color:#ffdad0;background:#74372952;border:1px solid #ce786b8a;border-radius:9px;padding:9px 11px;font-size:12px}
+.settings-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:9px;margin:21px 0 10px}.settings-actions button{font-size:13px;min-height:43px;cursor:pointer}.settings-actions .settings-clear{margin-right:auto}.settings-footnote{font-size:11px;color:#afc0b9;margin:12px 0 0;padding-top:13px;border-top:1px solid #8b997754}
+@media(max-width:800px){.topbar{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:'brand config' 'links links';height:auto;min-height:104px;gap:8px;padding:12px 0}.topbar>.brand{grid-area:brand;min-width:0}.topbar>.top-links{grid-area:links;margin:0;justify-content:flex-end}.topbar>.settings-shortcut{grid-area:config;justify-self:end}}
+@media(max-width:560px){.shell{padding:0 14px}.settings-shortcut{font-size:11px;padding:5px 9px;min-height:31px}.brand{gap:8px}.brand img{width:43px;height:43px}.brand strong{font-size:16px;letter-spacing:2px}.brand small{font-size:9px;letter-spacing:1.3px}.top-links a,.top-links span{font-size:12px;padding:6px 11px}.settings-dialog{padding:19px}.settings-header h2{font-size:22px}.settings-actions{display:grid;grid-template-columns:1fr}.settings-actions button{width:100%}}

@@ -1,9 +1,52 @@
-/* 606 情報局｜連線版 v2.5.0。私密資料僅來自經授權的 SQL RPC。 */
+/* 606 情報局｜連線版 v2.5.4。公開 Supabase 設定由瀏覽器管理，私密資料仍僅來自經授權的 SQL RPC。 */
 (() => {
   'use strict';
   const $ = id => document.getElementById(id);
-  const conf = window.INTEL606_SUPABASE || {};
-  const configOK = /^https:\/\/[-a-z0-9.]+\.supabase\.co\/?$/i.test(conf.url || '') && /\S/.test(conf.publishableKey || '');
+  const CONFIG_KEY = 'intel606_supabase_public_config_v1';
+  const fileConfig = window.INTEL606_SUPABASE || {};
+  function normalizeConfig(data) {
+    if (!data || typeof data !== 'object') return null;
+    const url = String(data.url || '').trim().replace(/\/$/, '');
+    const publishableKey = String(data.publishableKey || '').trim();
+    if (!/^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(url)) return null;
+    // Supabase publishable key 為公開用途。舊版 JWT 僅接受 payload.role = anon。
+    if (/^sb_publishable_[a-z0-9_-]+$/i.test(publishableKey)) return {url,publishableKey};
+    if (/^[a-z0-9_-]+\.[a-z0-9_-]+\.[a-z0-9_-]+$/i.test(publishableKey)) {
+      try {
+        const part = publishableKey.split('.')[1];
+        const payload = JSON.parse(atob(part.replace(/-/g,'+').replace(/_/g,'/') + '='.repeat((4-part.length%4)%4)));
+        if (payload.role === 'anon') return {url,publishableKey};
+      } catch { /* 拒絕無法判別角色的 JWT */ }
+    }
+    return null;
+  }
+  function storedConfig() {
+    try { return normalizeConfig(JSON.parse(localStorage.getItem(CONFIG_KEY) || 'null')); }
+    catch { return null; }
+  }
+  let configOrigin = storedConfig() ? '本機設定' : '預設檔案';
+  function applyInviteConfig() {
+    const params = new URLSearchParams(location.hash.replace(/^#/, ''));
+    if (!params.has('sb_url') && !params.has('sb_key')) return;
+    const incoming = normalizeConfig({url:params.get('sb_url'),publishableKey:params.get('sb_key')});
+    // 公開金鑰不必保留在瀏覽器網址列；加入資訊在收到時清除 URL fragment。
+    history.replaceState(history.state,'',location.pathname+location.search);
+    if (!incoming) return;
+    const current = storedConfig() || normalizeConfig(fileConfig);
+    if (current && (current.url !== incoming.url || current.publishableKey !== incoming.publishableKey)) {
+      if (!confirm('這份邀請連結使用另一個 Supabase 專案。要切換這台裝置的連線設定以加入房間嗎？')) return;
+    }
+    try {
+      localStorage.setItem(CONFIG_KEY,JSON.stringify(incoming));
+      if (!current || current.url !== incoming.url || current.publishableKey !== incoming.publishableKey) localStorage.removeItem('intel606_last_room');
+      configOrigin = '邀請連結（已儲存在本機）';
+    } catch { configOrigin = '無法儲存邀請設定'; }
+  }
+  applyInviteConfig();
+  const conf = storedConfig() || normalizeConfig(window.INTEL606_SUPABASE || fileConfig);
+  const configOK = Boolean(conf);
+  // 供設定介面與遊戲核心查核是否使用同一份設定，不包含私人答案或伺服器密鑰。
+  window.INTEL606_RUNTIME = {version:'2.5.4', configured:configOK, source: storedConfig() ? 'localStorage' : 'online-config.js'};
   const esc = text => String(text ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const playerLabel = no => String(no).padStart(2,'0') + ' 號玩家';
   const show = (id, visible) => { $(id).hidden = !visible; };
@@ -11,7 +54,7 @@
   const stages = {
     lobby:['等待玩家集合','主控端建立房間後，邀請 3～8 位玩家使用自己的裝置加入。'],
     identity:['機密身分分發','每位玩家在自己的裝置確認身分卡，只有情報員能看到共同的隨機代碼對照表。'],
-    dossier:['公開抽骰結果','雙色骰子已產生本局公開代碼。情報員可以用代碼對照表找出情報卡的正確位置。'],
+    dossier:['公開雙色骰點數','雙色骰子已擲出公開點數，情報員可用自己的對照表查出機密代號。臥底只能看見點數。'],
     discussion:['情報卡已公開','所有玩家看到相同的情報卡；請口頭發言與討論，找出混入隊伍的臥底。'],
     undercover:['臥底已揭曉','請讓臥底根據場上線索，說出最後的猜測。'],
     answer:['正確答案揭曉','本局任務結束，可由主控端建立下一輪。'],
@@ -45,7 +88,7 @@
     if (urlRoom) $('joinCode').value = urlRoom.toUpperCase().slice(0,6);
     $('joinName').value = localStorage.getItem('intel606_nickname') || '';
     if (!configOK) {
-      alertBox('尚未設定 Supabase：請先編輯線上部署檔 online-config.js，填入 Project URL 與 publishable key。');
+      alertBox('尚未設定 Supabase：請點選畫面右上角的「⚙ 連線設定」，填入 Project URL 與公開金鑰。');
       for (const id of ['createRoom','joinRoom','openLibrary']) $(id).disabled = true;
       return;
     }
@@ -138,12 +181,14 @@
     return '<div class="draw-box"><div class="draw-stack" aria-hidden="true"><span>606</span><span>✦</span><span>機密</span></div><div class="draw-caption">正在從情報資料庫抽取本輪情報卡……</div></div>';
   }
   function diceMarkup() {
-    if (!room.drawn_code) return '';
-    const a = room.size === 3 ? '六面骰' : '八面骰';
-    const b = room.size === 3 ? '三種點數六面骰' : '六面骰';
-    const guide = room.size === 3 ? '第一顆：1／4→A、2／5→B、3／6→C；第二顆：1～3。' : '第一顆：1／5→A、2／6→B、3／7→C、4／8→D；第二顆：1～4。';
-    const rerolls = room.size === 4 ? (room.rerolls ? `第二顆骰子擲出 5／6，已重擲 ${room.rerolls} 次以確保公平。` : '第二顆骰子只接受 1～4，若出現 5／6 就重擲。') : '';
-    return `<div class="dice-area"><div class="die"><small>${a}</small>${room.dice_first}</div><div class="die red"><small>${b}</small>${room.dice_second}</div></div><div class="status-note">本輪公開任務代碼：<strong style="font-size:29px;color:#f1d7a3">${esc(room.drawn_code)}</strong><p class="hint">${guide} · ${rerolls}</p></div>`;
+    // 兩顆骰子的顏色與點數是公開資訊；查表後的機密代號絕不公開。
+    if (!Number.isInteger(room.dice_first) || !Number.isInteger(room.dice_second)) return '';
+    const blue = room.size === 3 ? '藍色六面骰（1～6）' : '藍色八面骰（1～8）';
+    const red = room.size === 3 ? '紅色六面骰（1～3，各兩面）' : '紅色六面骰（1～6）';
+    return `<div class="dice-area" aria-label="公開骰子結果：藍色 ${room.dice_first}、紅色 ${room.dice_second}">
+      <div class="die blue"><small>${blue}</small>${room.dice_first}</div>
+      <div class="die red"><small>${red}</small>${room.dice_second}</div>
+    </div><div class="status-note dice-result-note">本輪公開骰子點數：<strong>藍 ${room.dice_first}　／　紅 ${room.dice_second}</strong><p class="hint">情報員請私下查詢共同的代號對照表，勿向臥底透露機密代號。</p></div>`;
   }
   function renderHost([heading,desc]) {
     $('hostPhaseTitle').textContent = heading;
@@ -161,7 +206,7 @@
         html = `<p class="status-note">身分已確認：${ready}／${n} 位</p>`+
           btn('全員確認完成 · 公開抽骰','roll',{disabled:ready!==n});break;
       case 'dossier':
-        if (isRolling) html = '<div class="draw-box"><div class="dice-area"><div class="die rolling">✦</div><div class="die red rolling">✦</div></div><div class="draw-caption">機密代碼抽取中……</div></div>';
+        if (isRolling) html = '<div class="draw-box"><div class="dice-area"><div class="die blue rolling">✦</div><div class="die red rolling">✦</div></div><div class="draw-caption">雙色骰點數抽取中……</div></div>';
         else html = diceMarkup() + btn('抽取本輪情報卡','draw') + btn('管理情報卡','library',{cls:'outline'});
         break;
       case 'discussion':
@@ -170,7 +215,7 @@
         break;
       case 'undercover': html = `<div class="status-note">本輪臥底是 <strong>${esc(playerLabel(room.undercover_seat))}</strong></div>`+
         btn('臥底猜測完畢 · 公布答案','answer');break;
-      case 'answer': html = `<div class="status-note">機密代碼：${esc(room.drawn_code)} ／ 正確情報：<strong>${esc(room.answer_word || '—')}</strong></div>`+
+      case 'answer': html = `<div class="status-note">機密代號：${esc(room.drawn_code)} ／ 正確情報：<strong>${esc(room.answer_word || '—')}</strong></div>`+
         btn('建立下一輪任務','next');break;
       case 'closed': html = '<p>本房間已結束。</p>';break;
     }
@@ -184,10 +229,25 @@
       localTimer = setTimeout(renderRoom, Math.max(120, Math.max(drawingUntil,rollingUntil)-Date.now()+100));
     }
   }
-  function gridMap(codeMap, size, selected = '') {
-    if (!Array.isArray(codeMap)) return '';
-    return `<div class="code-grid" style="--size:${size}">${codeMap.map((code,i) =>
-      `<div class="code-cell ${selected===code?'highlight':''}"><strong>${esc(code)}</strong><small>情報格 ${i+1}</small></div>`).join('')}</div>`;
+  function gridMap(codeMap, size, first = null, second = null) {
+    const columns = size === 3 ? 3 : 6;
+    const rows = size === 3 ? 6 : 8;
+    if (!Array.isArray(codeMap) || codeMap.length !== columns * rows) {
+      return '<p class="map-error">本輪對照表尚未建立完整，請重新建立任務房間。</p>';
+    }
+    const cell = (code,i,j) => {
+      const selected = first === i + 1 && second === j + 1;
+      return `<div class="code-cell ${selected?'highlight':''}" ${selected?'aria-current="true"':''} title="藍色 ${i+1}、紅色 ${j+1}"><strong>${esc(code)}</strong></div>`;
+    };
+    let result = '<div class="code-map-caption">🔵 藍色骰子選列　·　🔴 紅色骰子選欄</div>'+
+      `<div class="code-grid" style="--columns:${columns}">`+
+      '<div class="code-corner" aria-hidden="true">藍＼紅</div>';
+    for (let j = 1; j <= columns; j++) result += `<div class="code-axis red-axis">${j}</div>`;
+    for (let i = 0; i < rows; i++) {
+      result += `<div class="code-axis blue-axis">${i+1}</div>`;
+      for (let j = 0; j < columns; j++) result += cell(codeMap[i*columns+j],i,j);
+    }
+    return result + '</div>';
   }
   function cardHTML(card,size) {
     if (!card || !Array.isArray(card.cells)) return '';
@@ -207,11 +267,15 @@
         if (isUndercover) html += '<p class="hint">從其他情報員的線索中，努力推測出正確代碼吧！</p>';
         else {
           html += '<p class="hint">這是本輪所有情報員共用的隨機代碼對照表。請依公開骰子代碼找到對應情報格，勿讓臥底看見。</p>'+
-            gridMap(room.code_map,room.size,room.drawn_code);
+            gridMap(room.code_map,room.size,room.dice_first,room.dice_second);
           if (room.drawn_code) {
-            const position = (room.code_map||[]).indexOf(room.drawn_code);
-            const word = position>=0 && room.card?.cells ? room.card.cells[position] : null;
-            html += `<div class="status-note">本輪代碼：<strong>${esc(room.drawn_code)}</strong> · 第 ${position+1} 格${word ? ` · 機密情報：<strong>${esc(word)}</strong>` : ''}</div>`;
+            // 代碼對照表有重複代號；情報卡本身僅有 size² 格，依代號的字母／數字定位。
+            const col = room.drawn_code.charCodeAt(0) - 65;
+            const row = Number(room.drawn_code.slice(1)) - 1;
+            const position = row * room.size + col;
+            const valid = row >= 0 && row < room.size && col >= 0 && col < room.size;
+            const word = valid && room.card?.cells ? room.card.cells[position] : null;
+            html += `<div class="status-note">機密代號：<strong>${esc(room.drawn_code)}</strong>${valid ? ` · 情報卡第 ${position+1} 格` : ''}${word ? ` · 機密情報：<strong>${esc(word)}</strong>` : ''}</div>`;
           }
         }
         html += '</div>';
@@ -222,7 +286,7 @@
         if (!mine?.ready) html += unlocked ? btn('已閱讀身分卡 · 確認收妥','ready') : '<p class="status-note">請先私下查看身分卡，再點選確認收妥。</p>';
         else html += '<p class="status-note">✓ 已確認身分卡，等待其他玩家完成。</p>';
       }
-      if (room.drawn_code) html += diceMarkup();
+      if (Number.isInteger(room.dice_first) && Number.isInteger(room.dice_second)) html += diceMarkup();
       if (room.phase==='discussion' && Date.now()<drawingUntil) html += drawAnimation();
       else if (room.card) html += cardHTML(room.card,room.size);
       if (room.undercover_seat) html += `<p class="status-note">本局臥底揭曉：<strong>${esc(playerLabel(room.undercover_seat))}</strong></p>`;
@@ -298,6 +362,12 @@
     $('projectionContent').innerHTML=cardHTML(room.card,room.size);
     $('projection').hidden=false;
   }
+  function updateSettingsIndicator() {
+    $('settingsDot').classList.toggle('configured',configOK);
+    $('openSupabaseSettings').title = configOK ? 'Supabase 已設定 · 點此檢視或修改' : '尚未設定 Supabase · 點此設定';
+  }
+  // 設定表單由 online.html 內的獨立控制器處理，避免 CDN 或 JS 快取造成按鈕無法開啟。
+  updateSettingsIndicator();
   document.addEventListener('click', e => {
     const act = e.target.closest('[data-action]')?.dataset.action;
     if (act) {
@@ -338,7 +408,10 @@
   $('copyInvite').addEventListener('click',async()=>{
     if(!room)return;
     const link=new URL('online.html',location.href);link.searchParams.set('room',room.code);
-    try{await navigator.clipboard.writeText(link.href);alertBox('已複製加入房間的連結。',true);}
+    // 只分享 Supabase 公開資訊，讓學生開啟邀請連結即可自動設定自己的瀏覽器。
+    const inviteConfig = new URLSearchParams({sb_url:conf.url,sb_key:conf.publishableKey});
+    link.hash = inviteConfig.toString();
+    try{await navigator.clipboard.writeText(link.href);alertBox('已複製包含公開連線設定的邀請連結。',true);}
     catch{alertBox('請手動分享這個連結：'+link.href,true);}
   });
   $('cardForm').addEventListener('submit',saveCard);
