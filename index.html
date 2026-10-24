@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#142c36">
-  <meta name="description" content="606情報局：誰是局外人？偵探學院單機任務，支援機密宮格抽選與輪流查看情報員／臥底身分。">
+  <meta name="description" content="606情報局：誰是局外人？偵探學院單機任務，3～8 位玩家共用發言與推理舞臺，角色證件採圓框人物肖像與分階段揭曉。">
   <title>606情報局｜誰是局外人？</title>
   <style>
     :root {
@@ -126,7 +126,7 @@
     .role-overline { color:#6e9878; letter-spacing:.12em; font-size:12px; font-weight:950; }
     .role-heading { margin:7px 0 10px; font-size:clamp(25px,3vw,35px); line-height:1.34; font-weight:950; letter-spacing:-.045em; }
     .role-description { line-height:1.8; color:#668275; font-size:14px; margin:0 0 23px; }
-    .role-form-row { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-bottom:12px; }
+    .role-form-row { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-bottom:12px; }
     .role-field { display:flex;flex-direction:column;gap:8px;font-size:13px;font-weight:900;color:#46654f; }
     .role-input { min-width:0; min-height:48px; padding:10px 13px; background:#f5f9f3; border:1px solid #cfe0ce; border-radius:12px; outline-offset:3px; color:#285b40; font-weight:850; font-size:15px; }
     .role-notice { border-radius:16px; background:#f0f7e7; border:1px solid #e2efd6; padding:15px 17px; margin:16px 0 22px; line-height:1.8; font-size:13px; color:#507257; }
@@ -140,13 +140,19 @@
     .role-privacy-symbol { width:70px;height:70px;border-radius:23px;background:#e2f1cc;color:#3b8456;display:grid;place-items:center;font-size:38px; }
     .role-privacy-box strong { font-size:20px; }
     .role-privacy-box p { max-width:380px;margin:0;font-size:13px;color:#7a9381;line-height:1.7; }
-    .identity-card { border-radius:23px;background:linear-gradient(155deg,#eaf8df,#f8fbf3);border:2px solid #bfdcac;padding:30px 15px;min-height:240px;display:flex; flex-direction:column;align-items:center;justify-content:center; gap:10px;text-align:center;margin:15px 0 24px;animation:card-pop .28s ease-out; }
-    .identity-card.is-chameleon { background:linear-gradient(145deg,#f9eee3,#fff7ed);border-color:#edceb1; }
-    .identity-icon { font-size:46px; }
-    .identity-title { font-size:clamp(25px,4vw,34px);font-weight:950; }
-    .identity-coordinate { font-size:clamp(42px,6vw,64px);font-weight:950;color:#2c7750;letter-spacing:-.08em;line-height:1.25; }
-    .identity-card.is-chameleon .identity-coordinate { color:#b68158; }
-    .identity-help { color:#63836c;font-size:13px;line-height:1.75;max-width:400px; }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     .role-completed { text-align:center; display:flex;flex-direction:column;align-items:center;gap:13px; padding:29px 3px 17px; }
     .role-completed-icon { font-size:66px; }
     .role-completed h2 { font-size:clamp(26px,3.8vw,40px);line-height:1.45;margin:0; }
@@ -159,10 +165,12 @@
     .role-note { font-size:12px;line-height:1.8;color:#779186;margin-top:23px; }
     @keyframes card-pop { from { transform:translateY(7px) scale(.97);opacity:.3; } to { transform:translateY(0) scale(1);opacity:1; } }
     @media (max-width:880px) { .role-layout { grid-template-columns:1fr; } .role-aside { padding:23px 26px; } .role-primary { min-height:0; } }
-    @media (max-width:520px) { .role-form-row { grid-template-columns:1fr 1fr; } .role-form-row .role-field:first-child { grid-column:1 / -1; } .role-primary,.role-aside { padding:23px 19px;border-radius:23px; } .switch-tabs { width:100%; } .switch-tab { flex:1; padding:12px 6px; font-size:13px; } .identity-card { min-height:250px;padding:27px 10px; } }
+    @media (max-width:520px) { .role-form-row { grid-template-columns:1fr; } .role-primary,.role-aside { padding:23px 19px;border-radius:23px; } .switch-tabs { width:100%; } .switch-tab { flex:1; padding:12px 6px; font-size:13px; }    }
     @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}}
   </style>
   <link rel="stylesheet" href="assets/academy.css">
+  <link rel="stylesheet" href="assets/identity-card.css">
+  <link rel="stylesheet" href="assets/undercover-reveal.css">
 </head>
 <body>
   <div class="site-shell">
@@ -185,12 +193,12 @@
       <img class="hero-crest" src="assets/crest.webp" alt="" aria-hidden="true" width="148" height="148">
       <div class="eyebrow"><span class="dot"></span>TOP SECRET · 偵探學院機密任務</div>
       <h1 id="heroTitle">606情報局：<span class="hero-highlight">誰是局外人？</span></h1>
-      <p class="hero-desc">五位情報員、一名臥底。開啟機密卷宗，分配身分與代號，讓偵探任務正式開始。</p>
+      <p class="hero-desc">每局固定一名臥底，其餘玩家為情報員。開啟機密卷宗，分配身分與代號，讓偵探任務正式開始。</p>
     </section>
 
     <nav class="app-switch" aria-label="遊玩模式">
       <div class="switch-tabs" role="tablist" aria-label="遊玩模式">
-        <button class="switch-tab" type="button" role="tab" id="tabPicker" aria-controls="pickerView" aria-selected="false">機密座標抽選</button>
+        <button class="switch-tab" type="button" role="tab" id="tabPicker" aria-controls="pickerView" aria-selected="false">機密代號抽選</button>
         <button class="switch-tab" type="button" role="tab" id="tabRole" aria-controls="roleView" aria-selected="true">輪流查看身分</button>
       </div>
       <span class="coming-tag">單機偵探任務 · 無須登入</span>
@@ -199,13 +207,13 @@
     <main class="workspace">
       <section class="board-card" aria-label="隨機選題棋盤">
         <div class="board-header">
-          <div><div class="section-overline">SECRET CODE BOARD</div><h2>機密情報表｜座標抽選</h2></div>
+          <div><div class="section-overline">SECRET CODE BOARD</div><h2>機密情報表｜代號抽選</h2></div>
           <div class="board-counter" id="boardCounter">3 × 3 · 9 格</div>
         </div>
         <div class="board-stage">
           <div id="boardGrid" class="board-grid" role="grid" aria-label="3 乘 3 機密情報抽選格"></div>
         </div>
-        <div class="board-foot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 10.5v5m0-7v.2"/></svg><span id="boardFootText">所有座標機率相同 · 請勿讓臥底看見公開抽選結果</span></div>
+        <div class="board-foot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 10.5v5m0-7v.2"/></svg><span id="boardFootText">所有代號機率相同 · 請勿讓臥底看見公開抽選結果</span></div>
       </section>
 
       <div>
@@ -232,62 +240,121 @@
           <button id="drawButton" type="button" class="play-button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 5 11 7-11 7V5Z" fill="currentColor" stroke="none"/></svg><span id="drawButtonText">開始抽題</span></button>
           <div class="secondary-row"><button id="clearButton" class="text-button" type="button" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg>清除目前結果</button><span class="shortcut">空白鍵也能抽題</span></div>
         </section>
-        <section class="history-card" aria-label="近期抽題紀錄"><div class="history-title"><span>最近抽到的格子</span><span id="historyCount">0 筆</span></div><div class="history-list" id="historyList"><span class="history-empty">尚未抽選機密座標。</span></div></section>
+        <section class="history-card" aria-label="近期抽題紀錄"><div class="history-title"><span>最近抽到的格子</span><span id="historyCount">0 筆</span></div><div class="history-list" id="historyList"><span class="history-empty">尚未抽選機密代號。</span></div></section>
       </div>
     </main>
 
-    <p class="bottom-note"><strong>保密提醒：</strong>此模式會公開所抽中的座標；正式遊戲請使用「輪流查看身分」，不要讓臥底看到這個畫面。</p>
+    <p class="bottom-note"><strong>保密提醒：</strong>此模式會公開所抽中的代號；正式遊戲請使用「輪流查看身分」，不要讓臥底看到這個畫面。</p>
 
     </div><!-- pickerView -->
     <section id="roleView" role="tabpanel" aria-labelledby="tabRole">
       <div class="role-layout">
         <div class="role-primary">
+          <div class="presentation-switch" id="presentationSwitch" hidden>
+            <button type="button" id="roleProjectionToggle" class="presentation-toggle" aria-pressed="false">✦ 開啟投影舞臺</button>
+          </div>
           <div id="roleSetupView">
             <div class="dossier-stamp" aria-hidden="true">機密任務 · CONFIDENTIAL</div>
             <div class="role-overline">CLASSIFIED DOSSIER · 606情報局</div>
-            <h2 class="role-heading">機密任務卷宗 <span class="dossier-no">MISSION 001</span></h2>
+            <h2 class="role-heading">機密任務卷宗 <span class="dossier-no"><span id="roleMissionNumber">MISSION 001</span></span></h2>
             <p class="role-description">情報員集合！設定本輪人數與情報表大小，輪流查看私人身分卡，找出混入隊伍的局外人。</p>
             <div class="role-form-row">
-              <label class="role-field" for="rolePlayerCount">場上玩家人數<input class="role-input" id="rolePlayerCount" type="number" min="3" max="40" step="1" value="6" inputmode="numeric"></label>
-              <label class="role-field" for="roleChameleonCount">臥底人數<select class="role-input" id="roleChameleonCount"><option value="1">1 人</option><option value="2">2 人</option><option value="3">3 人</option></select></label>
+              <label class="role-field" for="rolePlayerCount">場上玩家人數（3～8 位）<input class="role-input" id="rolePlayerCount" type="number" min="3" max="8" step="1" value="6" inputmode="numeric"></label>
               <label class="role-field" for="roleBoardSize">答案卡宮格<select class="role-input" id="roleBoardSize"><option value="3" selected>3 × 3</option><option value="4">4 × 4</option><option value="5">5 × 5</option></select></label>
             </div>
-            <div class="role-notice">五位情報員共享同一機密座標，臥底不知道真正代號。請搭配事先準備好的九宮格情報表確認詞彙；目前版本不儲存九個詞彙。</div>
+            <div class="role-notice">每局固定 <strong>1 名臥底</strong>，其他玩家共享同一機密代號；臥底不知道真正代號。請搭配對應的實體情報表確認詞彙；目前版本不儲存情報表詞彙。</div>
             <button type="button" class="role-primary-button" id="roleStartButton">啟動機密任務・分配身分</button>
           </div>
           <div id="roleReadyView" hidden>
             <div class="role-overline">IDENTITY VERIFICATION · 機密身分確認</div>
-            <h2 class="role-heading">等待 <span id="roleReadyPlayer">玩家 01</span> 查看情報</h2>
+            <h2 class="role-heading">準備抽取身分卡</h2>
+            <div class="role-waiting-card" aria-label="即將抽取的玩家編號">
+              <span class="role-waiting-label">本張身分卡屬於</span>
+              <strong id="roleReadyPlayer">01 號玩家</strong>
+              <span class="role-waiting-caption">請確認輪到本人後再查看</span>
+            </div>
             <div class="role-progress"><span id="roleReadyProgress">0 / 6 已確認</span><div class="role-progress-bar"><div id="roleProgressFill" class="role-progress-fill"></div></div></div>
-            <div class="role-privacy-box"><span class="role-privacy-symbol" aria-hidden="true">🔒</span><strong>請先確認只有自己能看到螢幕</strong><p>上一位玩家的身分已遮蔽。準備好後，再點下方按鈕抽取屬於你的卡片。</p></div>
-            <button type="button" class="role-primary-button" id="roleRevealButton">抽取並查看我的身分卡</button>
+            <div class="role-privacy-box"><span class="role-privacy-symbol" aria-hidden="true">🔒</span><strong>請先確認只有自己能看到螢幕</strong><p>上一位玩家的身分已遮蔽。若連接教室投影，請先暫停鏡像或改用私人螢幕，再查看身分卡。</p></div>
+            <button type="button" class="role-primary-button" id="roleRevealButton">抽取並查看 01 號玩家身分卡</button>
             <button type="button" class="role-minor-button" id="roleAbortButton">中止本輪，返回設定</button>
           </div>
           <div id="roleRevealView" hidden>
             <div class="role-overline">FOR YOUR EYES ONLY · 僅限本人查看</div>
             <h2 class="role-heading"><span id="roleRevealPlayer">玩家 01</span> 的身分卡</h2>
-            <p class="role-description">請自己查看，注意不要讓其他玩家看到。</p>
+            <p class="role-description">僅限本人觀看。請勿在教室投影或讓其他玩家看到這張卡。</p>
             <div class="identity-card" id="roleIdentityCard" aria-live="polite">
+              <div class="identity-decoration" aria-hidden="true"><img src="assets/crest.webp" alt="" width="55" height="55"><span>606 INTELLIGENCE BUREAU</span></div>
+              <div class="identity-player-label" id="roleIdentityPlayer">01 號玩家</div>
+              <!-- 角色肖像已與卡框整合至底圖；保留隱藏節點相容既有 JavaScript。 -->
+              <img id="roleIdentityPortrait" hidden aria-hidden="true" src="assets/agent-medallion.webp" alt="">
               <span id="roleIdentityIcon" class="identity-icon" aria-hidden="true"></span>
               <div id="roleIdentityTitle" class="identity-title"></div>
-              <div id="roleIdentityCoordinate" class="identity-coordinate"></div>
-              <div id="roleIdentityHelp" class="identity-help"></div>
+              <div class="identity-code-box"><div id="roleIdentityCodeLabel" class="identity-code-label">機密代號</div><div id="roleIdentityCoordinate" class="identity-coordinate"></div></div>
+              <div class="identity-classification" aria-hidden="true">FOR YOUR EYES ONLY · 僅限本人查看</div>
             </div>
+            <p id="roleIdentityHelp" class="role-card-guidance" aria-live="polite"></p>
             <button type="button" class="role-primary-button" id="roleNextButton">隱藏身分，交給下一位</button>
             <p class="role-note">按下按鈕後就會離開本張身分卡，避免下一位玩家看到你的身分。</p>
           </div>
           <div id="roleCompleteView" hidden>
-            <div class="role-completed"><div class="role-completed-icon" aria-hidden="true">🎉</div><div class="role-overline">MISSION READY · 任務啟動</div><h2>所有情報身分已確認<br>機密任務開始！</h2><p>所有玩家已完成身分確認。情報員依照機密代號提出線索，臥底則需觀察提示，設法融入情報局。</p></div>
+            <div class="mission-stage" aria-label="場上玩家發言與口頭推理共用舞臺">
+              <div class="mission-stage-head">
+                <div><div class="stage-stamp">MISSION ACTIVE · <span id="livePhaseBadge">機密情報蒐集中</span></div>
+                  <h2 id="liveStageTitle">情報員就位，開始調查！</h2>
+                  <p class="mission-stage-sub" id="liveStageHelp">依序提供線索；完成後留在同一畫面進行口頭推理與紙本投票。</p></div>
+                <div class="mission-stage-seal" aria-label="代號保密中"><span aria-hidden="true">⌕</span><strong>機密封存中</strong></div>
+              </div>
+              <div class="speaking-status" aria-live="polite" aria-atomic="true">
+                <span class="speaking-label" id="liveSpeakerLabel">現在輪到</span>
+                <strong id="liveSpeakerCount">01 號玩家</strong>
+                <span class="speaking-page" id="livePageCount">第 1–6 位／共 6 位</span>
+              </div>
+              <div id="livePlayerGrid" class="live-player-grid" aria-label="玩家編號一覽"></div>
+              <div class="mission-stage-bottom" id="liveSpeakerToolbar">
+                <button type="button" class="stage-minor" id="livePrevSpeaker">← 上一位</button>
+                <button type="button" class="stage-major" id="liveNextSpeaker">下一位玩家 →</button>
+              </div>
+            </div>
+            <button type="button" class="role-primary-button role-reveal-action" id="roleUnmaskButton" hidden>開啟封存卷宗・揭曉臥底</button>
+            <p class="role-note" id="roleMissionLiveNote">同一畫面完成發言與口頭推理，網頁不記錄線索或投票，也不公開任何人的身分。</p>
+          </div>
+          <div id="roleUndercoverView" hidden>
+            <div class="role-overline">CASE REVEAL · 第一階段</div>
+            <h2 class="role-heading">真正的局外人</h2>
+            <div class="mission-reveal-step">01 <span>揭曉臥底</span><i></i> 02 <span>揭曉代號（尚未解封）</span></div>
+            <div class="reveal-dossier reveal-undercover undercover-reveal-card" aria-live="polite">
+              <div class="undercover-reveal-mobile-visual" aria-hidden="true"></div>
+              <div id="roleUndercoverNumber" class="reveal-main-number"></div>
+              <p class="reveal-help">請臥底根據線索，<strong>口頭猜測機密代號</strong>。</p>
+            </div>
+            <button type="button" class="role-primary-button role-reveal-action" id="roleAnswerButton">臥底猜測完畢・公布機密代號</button>
+            <p class="role-note">先聽完臥底的猜測和理由，再揭曉正確答案。</p>
+          </div>
+          <div id="roleAnswerView" hidden>
+            <div class="role-overline">CASE CLOSED · 第二階段</div>
+            <h2 class="role-heading">機密代號正式揭曉</h2>
+            <div class="mission-reveal-step">01 <span>已確認臥底</span><i></i> 02 <span>機密代號已解封</span></div>
+            <div class="reveal-dossier reveal-answer" aria-live="polite">
+              <div class="reveal-kicker">MISSION DECLASSIFIED · 解封情報</div>
+              <div class="reveal-character-block reveal-answer-figure">
+                <div class="reveal-character-medallion is-answer-crest">
+                  <img src="assets/crest.webp" alt="606情報局徽章" width="700" height="700">
+                </div>
+              </div>
+              <div class="reveal-answer-title">本輪正確的機密代號</div>
+              <div id="roleAnswerCode" class="reveal-secret-code" aria-label="本輪正確機密代號"></div>
+            </div>
             <button type="button" class="role-primary-button" id="roleRestartButton">建立下一輪機密任務</button>
-            <p class="role-note">為避免洩漏身分，本頁不會公布本輪答案、抽中座標或玩家身分清單。</p>
+            <p class="role-note">下一輪將重新隨機選出一名臥底與新的機密代號，不保留上一輪身分紀錄。</p>
           </div>
         </div>
         <aside class="role-aside" aria-label="玩法步驟">
           <div class="role-overline">MISSION BRIEFING</div><h2>情報局任務流程</h2>
-          <div class="aside-item"><span class="aside-count">01</span><div><strong>建立機密代號</strong><p>系統暗中抽取一個座標，請搭配對應情報表使用；這一輪的秘密不會變動。</p></div></div>
-          <div class="aside-item"><span class="aside-count">02</span><div><strong>輪流確認情報員或臥底</strong><p>情報員知道秘密座標，臥底不知道；查看後務必先隱藏身分。</p></div></div>
+          <div class="aside-item"><span class="aside-count">01</span><div><strong>建立機密代號</strong><p>系統暗中抽取一個代號，請搭配對應情報表使用；這一輪的秘密不會變動。</p></div></div>
+          <div class="aside-item"><span class="aside-count">02</span><div><strong>輪流確認情報員或臥底</strong><p>情報員知道秘密代號，臥底不知道；查看後務必先隱藏身分。</p></div></div>
           <div class="aside-item"><span class="aside-count">03</span><div><strong>依序發言、口頭推理</strong><p>場上玩家提供詞彙線索，台下調查小隊口頭討論、以紙條投票。</p></div></div>
-          <div class="role-notice">本版僅支援單機輪流查看身分。QR Code 多人連線與數位討論功能均未啟用。</div>
+          <div class="aside-item"><span class="aside-count">04</span><div><strong>分兩步揭曉答案</strong><p>討論結束後先公布臥底，等臥底口頭猜完代號，再揭曉真正代號。</p></div></div>
+          <div class="role-notice">本版為單機遊戲；身分確認時請勿公開投影。尚未提供 QR Code 多人連線或數位討論功能。揭曉前的答案只保存在當前頁面的記憶體中。</div>
         </aside>
       </div>
     </section>
@@ -354,7 +421,7 @@
         $('historyCount').textContent = `${state.history.length} 筆`;
         const list = $('historyList');
         if (!state.history.length) {
-          const empty = document.createElement('span'); empty.className = 'history-empty'; empty.textContent = '尚未抽選機密座標。'; list.replaceChildren(empty); return;
+          const empty = document.createElement('span'); empty.className = 'history-empty'; empty.textContent = '尚未抽選機密代號。'; list.replaceChildren(empty); return;
         }
         const frag = document.createDocumentFragment();
         state.history.forEach(item => {
@@ -370,7 +437,7 @@
         $('resultTitle').textContent = '等待抽題';
         $('resultDescription').textContent = '準備好就開始抽選。';
         $('resultCode').textContent = '—';
-        $('boardFootText').textContent = '每格機率相同 · 這個模式會公開座標';
+        $('boardFootText').textContent = '每格機率相同 · 這個模式會公開代號';
         updateControls();
       }
       function playTone(frequency, duration = .04, volume = .02) {
@@ -397,7 +464,7 @@
         const answer = coord(index);
         highlight(index, 'is-selected');
         $('resultPanel').classList.remove('is-rolling'); $('resultPanel').classList.add('has-result');
-        $('resultTitle').textContent = '本輪抽選座標';
+        $('resultTitle').textContent = '本輪抽選代號';
         $('resultDescription').textContent = '請對照實體情報表確認詞彙';
         $('resultCode').textContent = answer;
         $('boardFootText').textContent = `已選出 ${answer} · 點擊「再抽一次」繼續`;
@@ -416,7 +483,7 @@
         let last = -1;
         $('resultPanel').classList.remove('has-result'); $('resultPanel').classList.add('is-rolling');
         $('resultTitle').textContent = '正在隨機選題'; $('resultDescription').textContent = '亮點會停在其中一格…'; $('resultCode').textContent = '···';
-        $('boardFootText').textContent = '正在抽取這一輪的機密座標…';
+        $('boardFootText').textContent = '正在抽取這一輪的機密代號…';
         updateControls();
         const prefersReducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
         if (prefersReducedMotion) { state.timer = setTimeout(() => finish(finalIndex, runId), 230); return; }
@@ -469,28 +536,47 @@
         if (target instanceof Element && (target.closest('button, input, select, textarea, a') || target.isContentEditable)) return;
         event.preventDefault(); draw();
       });
-      // 單機輪流抽身分：一輪只抽一次共同座標。所有秘密僅存在此頁記憶體中。
-      const roleState = { stage: 'setup', deck: [], current: 0, secret: -1, size: 3, total: 0, chameleons: 1 };
-      const roleStages = ['roleSetupView', 'roleReadyView', 'roleRevealView', 'roleCompleteView'];
+      // 單機輪流抽身分：每輪只抽一次共同代號，並固定只有一名臥底。
+      // 一輪完成前僅存於當前頁面記憶體；揭曉必須由教師依序觸發。
+      const roleState = { stage: 'setup', deck: [], current: 0, secret: -1, size: 3, total: 0, round: 1, speaker: 0, projection: false }; // speaker === total 表示全員發言結束；不另開推理階段。
+      const roleStages = ['roleSetupView', 'roleReadyView', 'roleRevealView', 'roleCompleteView', 'roleUndercoverView', 'roleAnswerView'];
+      const roleStageNames = ['setup', 'ready', 'reveal', 'complete', 'undercover', 'answer'];
       function eraseRoleCard() {
         $('roleIdentityIcon').textContent = '';
         $('roleIdentityTitle').textContent = '';
+        $('roleIdentityPlayer').textContent = '';
         $('roleIdentityCoordinate').textContent = '';
         $('roleIdentityHelp').textContent = '';
+        $('roleIdentityCodeLabel').textContent = '機密代號';
+        $('roleIdentityPortrait').src = 'assets/agent-medallion.webp';
+        $('roleIdentityPortrait').alt = '情報員人物半身肖像';
         $('roleIdentityCard').classList.remove('is-chameleon');
       }
+      function eraseRevealPanels() {
+        $('roleUndercoverNumber').textContent = '';
+        $('roleAnswerCode').textContent = '';
+      }
       function showRoleStage(stage) {
-        roleStages.forEach((id, index) => { $(id).hidden = ['setup', 'ready', 'reveal', 'complete'][index] !== stage; });
+        roleStages.forEach((id, index) => { $(id).hidden = roleStageNames[index] !== stage; });
         roleState.stage = stage;
+        const isPublicStage = ['complete', 'undercover', 'answer'].includes(stage);
+        $('presentationSwitch').hidden = !isPublicStage;
+        if (!isPublicStage) setProjection(false);
+        if (stage === 'complete') renderLiveStage();
         if (stage === 'ready') {
-          $('roleReadyPlayer').textContent = `玩家 ${formatRound(roleState.current + 1)}`;
+          $('roleReadyPlayer').textContent = `${formatRound(roleState.current + 1)} 號玩家`;
+          $('roleRevealButton').textContent = `抽取並查看 ${formatRound(roleState.current + 1)} 號玩家身分卡`;
           $('roleReadyProgress').textContent = `${roleState.current} / ${roleState.total} 已確認`;
           $('roleProgressFill').style.width = `${(roleState.current / roleState.total) * 100}%`;
         }
+        if (stage === 'setup') $('roleMissionNumber').textContent = `MISSION ${String(roleState.round).padStart(3, '0')}`;
       }
-      function resetRole() {
-        eraseRoleCard();
+      function resetRole(advanceRound = false) {
+        setProjection(false);
+        eraseRoleCard(); eraseRevealPanels();
+        roleState.speaker = 0;
         roleState.deck = []; roleState.secret = -1; roleState.current = 0; roleState.total = 0;
+        if (advanceRound) roleState.round++;
         showRoleStage('setup');
       }
       function shuffleDeck(deck) {
@@ -501,47 +587,133 @@
         return deck;
       }
       function startRoles() {
+        if (roleState.stage !== 'setup') return;
         const players = Number($('rolePlayerCount').value);
-        const chameleons = Number($('roleChameleonCount').value);
         const size = Number($('roleBoardSize').value);
-        if (!Number.isInteger(players) || players < 3 || players > 40) {
-          alert('玩家人數請設定為 3～40 人。'); $('rolePlayerCount').focus(); return;
-        }
-        if (!Number.isInteger(chameleons) || chameleons < 1 || chameleons > 3 || chameleons >= players) {
-          alert('臥底人數必須介於 1～3 人，且少於總玩家人數。'); return;
+        if (!Number.isInteger(players) || players < 3 || players > 8) {
+          alert('玩家人數請設定為 3～8 人。'); $('rolePlayerCount').focus(); return;
         }
         if (![3,4,5].includes(size)) return;
-        roleState.total = players; roleState.chameleons = chameleons; roleState.size = size; roleState.current = 0;
+        roleState.total = players; roleState.size = size; roleState.current = 0;
+        roleState.speaker = 0;
         roleState.secret = randomInt(size * size);
-        roleState.deck = shuffleDeck([...Array(chameleons).fill('chameleon'), ...Array(players - chameleons).fill('normal')]);
-        eraseRoleCard();
+        roleState.deck = shuffleDeck(['chameleon', ...Array(players - 1).fill('normal')]);
+        eraseRoleCard(); eraseRevealPanels();
         showRoleStage('ready');
       }
       function revealRole() {
         if (roleState.stage !== 'ready' || roleState.current >= roleState.deck.length) return;
         const isChameleon = roleState.deck[roleState.current] === 'chameleon';
         $('roleRevealPlayer').textContent = `玩家 ${formatRound(roleState.current + 1)}`;
-        $('roleIdentityIcon').textContent = isChameleon ? '🔍' : '🛡️';
-        $('roleIdentityTitle').textContent = isChameleon ? '你是臥底' : '你是情報員';
+        $('roleIdentityPlayer').textContent = `${formatRound(roleState.current + 1)} 號玩家`; 
+        $('roleIdentityPortrait').src = isChameleon ? 'assets/undercover-medallion.webp' : 'assets/agent-medallion.webp';
+        $('roleIdentityPortrait').alt = isChameleon ? '臥底人物半身肖像' : '情報員人物半身肖像';
+        $('roleIdentityIcon').textContent = isChameleon ? '⌕' : '✦';
+        $('roleIdentityTitle').textContent = isChameleon ? '你/妳是臥底' : '你/妳是情報員';
+        $('roleIdentityCodeLabel').textContent = isChameleon ? '機密代號尚未取得' : '本輪機密代號';
         $('roleIdentityCoordinate').textContent = isChameleon ? '？？？' : letters[roleState.secret % roleState.size] + (Math.floor(roleState.secret / roleState.size) + 1);
-        $('roleIdentityHelp').textContent = isChameleon ? '你不知道真正的機密代號。請根據其他玩家的線索推理，設法提出合理提示。' : '請對照機密情報表找出代號，保密並提供相關線索，不要直接說出答案。';
+        $('roleIdentityHelp').textContent = isChameleon ? '你不知道真正的機密代號。請根據其他人的線索推理，並嘗試提供合理提示。' : '請對照情報表找到代號詞彙，保密提供線索，不要直接說出答案。';
         $('roleIdentityCard').classList.toggle('is-chameleon', isChameleon);
-        $('roleNextButton').textContent = roleState.current + 1 === roleState.total ? '確認身分，開始遊戲' : '隱藏身分，交給下一位';
+        $('roleNextButton').textContent = roleState.current + 1 === roleState.total ? '隱藏身分，開始遊戲' : '隱藏身分，交給下一位';
         showRoleStage('reveal');
       }
       function nextRole() {
         if (roleState.stage !== 'reveal') return;
-        eraseRoleCard(); // 切換頁面前先立即清除所有私人顯示內容。
+        eraseRoleCard(); // 交棒前立即清空上一人的私人卡片。
         roleState.current++;
-        if (roleState.current >= roleState.total) {
-          // 本輪不保留可供其他玩家讀取的角色陣列與秘密座標。
-          roleState.deck = []; roleState.secret = -1;
-          showRoleStage('complete');
-        } else showRoleStage('ready');
+        if (roleState.current >= roleState.total) showRoleStage('complete');
+        else showRoleStage('ready');
+      }
+      // v2.3.2 發言與推理共用同一投影舞臺：不切換介面或清除玩家卡。
+      // 私人卡確認完畢後才允許投影；公開舞臺只顯示編號與發言進度。
+      function setProjection(enabled) {
+        const allowed = ['complete', 'undercover', 'answer'].includes(roleState.stage);
+        roleState.projection = Boolean(enabled && allowed);
+        document.body.classList.toggle('is-projecting', roleState.projection);
+        $('roleProjectionToggle').textContent = roleState.projection ? '↙ 離開投影舞臺' : '✦ 開啟投影舞臺';
+        $('roleProjectionToggle').setAttribute('aria-pressed', String(roleState.projection));
+        if (roleState.projection) window.scrollTo({ top: 0, behavior: 'instant' });
+      }
+      function renderLiveStage() {
+        const count = roleState.total;
+        if (!count) return;
+        const finished = roleState.speaker >= count;
+        $('livePhaseBadge').textContent = '發言與推理共用舞臺';
+        $('liveStageTitle').textContent = '情報員就位，開始調查！';
+        $('liveStageHelp').textContent = finished
+          ? '請根據剛才的線索進行口頭推理與紙本投票；教師確認後再揭曉。'
+          : '依序提供線索；完成後留在同一畫面進行口頭推理與紙本投票。';
+        $('liveSpeakerLabel').textContent = finished ? '發言進度' : '現在輪到';
+        $('liveSpeakerCount').textContent = finished ? '全員發言完畢' : `${formatRound(roleState.speaker + 1)} 號玩家`;
+        $('livePageCount').textContent = `共 ${count} 位玩家`;
+        const frag = document.createDocumentFragment();
+        for (let i = 0; i < count; i++) {
+          const cell = document.createElement('div');
+          cell.className = 'live-player-card';
+          if (!finished && i === roleState.speaker) cell.classList.add('is-speaking');
+          if (i < roleState.speaker) cell.classList.add('has-spoken');
+          const icon = document.createElement('span'); icon.className = 'live-player-emblem'; icon.textContent = '✦'; icon.setAttribute('aria-hidden', 'true');
+          const number = document.createElement('strong'); number.className = 'live-player-number'; number.textContent = formatRound(i + 1);
+          const label = document.createElement('span'); label.className = 'live-player-caption'; label.textContent = '號玩家';
+          const status = document.createElement('span'); status.className = 'live-player-status';
+          status.textContent = i < roleState.speaker ? '已發言' : i === roleState.speaker ? '輪到發言' : '等待發言';
+          cell.append(icon, number, label, status); frag.appendChild(cell);
+        }
+        $('livePlayerGrid').classList.toggle('is-eight-player-layout', count >= 7);
+        $('livePlayerGrid').classList.toggle('is-all-spoken', finished);
+        $('livePlayerGrid').replaceChildren(frag);
+        $('livePlayerGrid').setAttribute('aria-label', `場上玩家 01 至 ${formatRound(count)} 號`);
+        $('roleUnmaskButton').hidden = !finished;
+        $('livePrevSpeaker').disabled = roleState.speaker === 0;
+        $('liveNextSpeaker').hidden = finished;
+        $('liveNextSpeaker').textContent = roleState.speaker === count - 1 ? '全員發言完成 ✓' : '下一位玩家 →';
+        $('roleMissionLiveNote').textContent = finished
+          ? '現在直接利用上方玩家編號進行口頭推理及紙本投票；結束後由教師點選揭曉。若需修正順序，可按「上一位」。'
+          : '教師切換發言者；口頭推理與紙本投票都在這個畫面進行，無須另外切換。';
+      }
+      function moveSpeaker(offset) {
+        if (roleState.stage !== 'complete') return;
+        const next = roleState.speaker + offset;
+        if (next < 0 || next > roleState.total) return;
+        roleState.speaker = next;
+        renderLiveStage();
+        playTone(485,.04,.009);
+      }
+      $('roleProjectionToggle').addEventListener('click', () => setProjection(!roleState.projection));
+      $('livePrevSpeaker').addEventListener('click', () => moveSpeaker(-1));
+      $('liveNextSpeaker').addEventListener('click', () => moveSpeaker(1));
+      document.addEventListener('keydown', event => {
+        if (event.ctrlKey || event.altKey || event.metaKey || event.repeat) return;
+        if (event.key === 'Escape' && roleState.projection) { setProjection(false); return; }
+        if (roleState.stage !== 'complete') return;
+        const target = event.target;
+        if (target instanceof Element && (target.closest('button,input,select,textarea,a') || target.isContentEditable)) return;
+        if (event.key === 'ArrowRight') { event.preventDefault(); moveSpeaker(1); }
+        else if (event.key === 'ArrowLeft') { event.preventDefault(); moveSpeaker(-1); }
+      });
+      function unmask() {
+        if (roleState.stage !== 'complete' || roleState.speaker !== roleState.total) return;
+        if (!confirm('請確認所有玩家已發言，場上投票與台下小組的口頭推理也都結束。確定揭曉臥底嗎？')) return;
+        const index = roleState.deck.indexOf('chameleon');
+        if (index < 0 || roleState.secret < 0) return;
+        $('roleUndercoverNumber').textContent = `${formatRound(index + 1)} 號玩家`;
+        showRoleStage('undercover');
+        playTone(450,.11,.035);
+      }
+      function revealAnswer() {
+        if (roleState.stage !== 'undercover') return;
+        const index = roleState.deck.indexOf('chameleon');
+        if (index < 0 || roleState.secret < 0) return;
+        const answer = letters[roleState.secret % roleState.size] + (Math.floor(roleState.secret / roleState.size) + 1);
+        $('roleAnswerCode').textContent = answer;
+        showRoleStage('answer');
+        // 答案揭曉後不再保留可重建整份角色分配的清單。
+        roleState.deck = []; roleState.secret = -1;
+        playTone(660,.18,.035);
       }
       function switchMode(toRole) {
-        if (!toRole && roleState.stage !== 'setup' && roleState.stage !== 'complete') {
-          if (!confirm('目前正在輪流抽身分。切換模式會中止這一輪並清除所有身分，確定切換嗎？')) return;
+        if (!toRole && roleState.stage !== 'setup') {
+          if (!confirm('切換至公開抽選會結束本輪並清除尚未揭曉的機密資料，確定切換嗎？')) return;
           resetRole();
         }
         $('pickerView').hidden = toRole;
@@ -549,7 +721,7 @@
         $('tabPicker').setAttribute('aria-selected', String(!toRole));
         $('tabRole').setAttribute('aria-selected', String(toRole));
         $('heroTitle').innerHTML = toRole ? '機密任務：<span class="hero-highlight">誰是局外人？</span>' : '機密情報：<span class="hero-highlight">隨機抽選。</span>';
-        document.querySelector('.hero-desc').textContent = toRole ? '一個裝置輪流查看私人身分卡。情報員知道機密座標，臥底只能根據線索推理。' : '隨機抽取情報表座標。注意：這個畫面會公開結果，請勿讓臥底旁觀。';
+        document.querySelector('.hero-desc').textContent = toRole ? '一個裝置輪流查看私人身分卡。情報員知道機密代號，臥底只能根據線索推理。' : '隨機抽取情報表代號。注意：這個畫面會公開結果，請勿讓臥底旁觀。';
         document.querySelector('.eyebrow').lastChild.textContent = toRole ? 'TOP SECRET · 身分確認' : 'TOP SECRET · 公開抽選';
       }
       $('tabPicker').addEventListener('click', () => switchMode(false));
@@ -558,11 +730,13 @@
       $('roleRevealButton').addEventListener('click', revealRole);
       $('roleNextButton').addEventListener('click', nextRole);
       $('roleAbortButton').addEventListener('click', () => { if (confirm('中止這一輪？所有尚未查看的身分都會重新抽取。')) resetRole(); });
-      $('roleRestartButton').addEventListener('click', resetRole);
+      $('roleUnmaskButton').addEventListener('click', unmask);
+      $('roleAnswerButton').addEventListener('click', revealAnswer);
+      $('roleRestartButton').addEventListener('click', () => resetRole(true));
       // 網頁隱藏、切換分頁時，不讓已揭曉的身分繼續曝露在畫面上。
       document.addEventListener('visibilitychange', () => {
         if (document.hidden && roleState.stage === 'reveal') {
-          // 身分持有者按下一次「查看」可重新開啟；但畫面切回時先保護私人資訊。
+          // 同一玩家可以重新查看自己的卡片；切回時一律先保持遮蔽。
           eraseRoleCard(); showRoleStage('ready');
         }
       });
