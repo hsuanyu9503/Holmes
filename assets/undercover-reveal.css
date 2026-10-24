@@ -1,0 +1,132 @@
+/* 606情報局 v2.4.18｜臥底公開頁使用使用者確認的整合素材。
+   金色圓框與人物已合成於底圖；僅玩家編號與引導文字為動態 HTML。
+   本檔獨立管理揭曉頁，避免舊人物疊層再次蓋住飾邊。 */
+#roleUndercoverView .reveal-dossier.reveal-undercover.undercover-reveal-card {
+  box-sizing:border-box;
+  container:undercover-card / inline-size;
+  position:relative;
+  isolation:isolate;
+  display:block;
+  width:100%;
+  height:auto;
+  min-height:0;
+  aspect-ratio:1672 / 941;
+  margin:15px 0 23px;
+  padding:0;
+  border:0;
+  border-radius:16px;
+  overflow:hidden;
+  background:#241820 url('./undercover-reveal-integrated.webp') center / 100% 100% no-repeat;
+  box-shadow:0 15px 34px rgba(23,10,14,.24);
+  text-align:center;
+}
+#roleUndercoverView .undercover-reveal-card::before,
+#roleUndercoverView .undercover-reveal-card::after {
+  display:none!important; content:none!important;
+}
+#roleUndercoverView .undercover-reveal-card .undercover-reveal-mobile-visual { display:none; }
+/* The blank parchment plaque is approximately x=29%-71%, y=55%-71%. */
+#roleUndercoverView .undercover-reveal-card .reveal-main-number,
+body.is-projecting #roleUndercoverView .undercover-reveal-card .reveal-main-number {
+  position:absolute;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-sizing:border-box;
+  top:56.55%; left:28.4%; width:43.2%; height:13.4%;
+  max-width:none;
+  margin:0; padding:0 3%; transform:none;
+  border:0; border-radius:0; background:transparent; box-shadow:none;
+  color:#59353a;
+  font:900 clamp(17px,3.5cqw,50px)/1.1 'Noto Serif TC','PMingLiU',serif;
+  letter-spacing:.01em;
+  white-space:nowrap; text-align:center; text-shadow:none;
+}
+/* The dark lower plaque is approximately x=29%-71%, y=73%-88%. */
+#roleUndercoverView .undercover-reveal-card .reveal-help,
+body.is-projecting #roleUndercoverView .undercover-reveal-card .reveal-help {
+  position:absolute;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-sizing:border-box;
+  top:74.15%; left:29%; width:42%; height:13%;
+  max-width:none;
+  margin:0; padding:0 2%; transform:none;
+  border:0; border-radius:0; background:transparent; box-shadow:none;
+  color:#fff1da;
+  font:750 clamp(9px,1.75cqw,21px)/1.45 'Noto Sans TC','Microsoft JhengHei',sans-serif;
+  overflow-wrap:anywhere;
+  white-space:normal; text-align:center;
+  text-shadow:0 1px 5px rgba(0,0,0,.68);
+}
+#roleUndercoverView .undercover-reveal-card .reveal-help strong {font-weight:850;}
+/* Mobile uses a magnified crop of the SAME confirmed artwork. The two dynamic fields
+   remain in readable, matching plaques underneath rather than becoming tiny on a 16:9 poster. */
+@media (max-width:640px) {
+  #roleUndercoverView .reveal-dossier.reveal-undercover.undercover-reveal-card {
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    gap:0!important;
+    width:100%!important;
+    min-height:0!important;
+    height:auto!important;
+    aspect-ratio:auto!important;
+    margin:12px 0 18px!important;
+    padding:0 12px 16px!important;
+    border:1px solid #a6815f!important;
+    border-radius:16px!important;
+    background:#281a22!important;
+    overflow:hidden!important;
+  }
+  #roleUndercoverView .undercover-reveal-card .undercover-reveal-mobile-visual {
+    display:block!important;
+    order:0;
+    flex:none;
+    position:relative!important;
+    inset:auto!important;
+    width:calc(100% + 24px)!important;
+    aspect-ratio:5 / 4!important;
+    height:auto!important;
+    margin:0 -12px 0!important;
+    background:#291b24 url('./undercover-reveal-mobile-art.webp') center 45% / cover no-repeat!important;
+    border:0!important;
+    box-shadow:none!important;
+  }
+  #roleUndercoverView .reveal-dossier.reveal-undercover.undercover-reveal-card .reveal-main-number,
+  body.is-projecting #roleUndercoverView .reveal-dossier.reveal-undercover.undercover-reveal-card .reveal-main-number {
+    order:1!important;
+    position:relative!important;
+    top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;
+    width:100%!important;max-width:380px!important;height:auto!important;min-height:60px!important;
+    margin:10px auto 8px!important;padding:8px 12px!important;transform:none!important;
+    border:2px solid #b18d54!important;border-radius:13px!important;
+    background:linear-gradient(130deg,#f4dfc0,#e5c69c)!important;
+    box-shadow:inset 0 0 0 3px rgba(255,248,229,.58)!important;
+    color:#5b3338!important;text-shadow:none!important;
+    font-size:clamp(24px,7.1vw,35px)!important;line-height:1.2!important;
+    flex-shrink:0!important;
+    text-align:center!important;
+  }
+  #roleUndercoverView .reveal-dossier.reveal-undercover.undercover-reveal-card .reveal-help,
+  body.is-projecting #roleUndercoverView .reveal-dossier.reveal-undercover.undercover-reveal-card .reveal-help {
+    order:2!important;
+    position:relative!important;
+    top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;
+    width:100%!important;max-width:380px!important;height:auto!important;min-height:58px!important;
+    margin:0 auto!important;padding:10px 14px!important;transform:none!important;
+    border:1px solid #a98658!important;border-radius:12px!important;
+    background:linear-gradient(145deg,#322325,#211a1e)!important;
+    box-shadow:inset 0 0 0 2px rgba(196,157,99,.12)!important;
+    color:#fff0d8!important;text-shadow:none!important;
+    font-size:clamp(12px,3.45vw,15px)!important;line-height:1.45!important;
+    flex-shrink:0!important;
+    white-space:normal!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  #roleUndercoverView .undercover-reveal-card {animation:none!important;}
+}
