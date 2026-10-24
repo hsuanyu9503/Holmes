@@ -4,10 +4,11 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0a2832">
 <title>606 情報局｜連線任務</title>
-<link rel="stylesheet" href="assets/online.css?v=2.5.0">
+<link rel="stylesheet" href="assets/online.css?v=2.5.2">
 </head>
 <body>
 <div class="shell">
+  <button class="settings-shortcut" id="openSupabaseSettings" type="button" aria-haspopup="dialog" aria-controls="supabaseDialog" title="設定 Supabase 連線"><span class="settings-dot" id="settingsDot" aria-hidden="true"></span>⚙ 連線設定</button>
   <header class="topbar">
     <a class="brand" href="index.html"><img src="assets/crest.webp" alt=""><span><strong>606 情報局</strong><small>DETECTIVE ACADEMY</small></span></a>
     <div class="top-links"><a href="index.html">單機模式</a><span aria-current="page">連線模式</span></div>
@@ -50,8 +51,23 @@
   </main>
   <footer>606 INTELLIGENCE BUREAU · 連線遊戲僅同步必要資訊 · 身分與答案由伺服器保護</footer>
 </div>
+<dialog id="supabaseDialog" class="settings-dialog" aria-labelledby="settingsTitle" aria-describedby="settingsIntro">
+  <div class="settings-header"><div><span class="kicker">CONNECTION SETTINGS</span><h2 id="settingsTitle">Supabase 連線設定</h2></div><button type="button" class="settings-close" id="closeSupabaseSettings" aria-label="關閉設定">✕</button></div>
+  <p id="settingsIntro" class="settings-intro">在這裡設定連線資料庫，無須編輯程式檔案。設定儲存在這台裝置的瀏覽器中。</p>
+  <div id="configSource" class="settings-source" role="status"></div>
+  <form id="supabaseForm" autocomplete="off">
+    <label for="supabaseUrl">Project URL</label>
+    <input id="supabaseUrl" name="supabaseUrl" type="url" inputmode="url" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="https://your-project.supabase.co" required>
+    <label for="supabaseKey">Publishable key／Anon key</label>
+    <div class="settings-key-row"><input id="supabaseKey" name="supabaseKey" type="password" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="sb_publishable_..." required><button id="toggleKeyVisible" class="settings-reveal" type="button" aria-pressed="false">顯示</button></div>
+    <p class="settings-warning">只可填公開的 <strong>publishable key</strong> 或舊版 <strong>anon key</strong>。請勿輸入 <strong>secret／service_role 金鑰</strong>、資料庫密碼或個人帳密。</p>
+    <p id="settingsError" class="settings-error" role="alert" hidden></p>
+    <div class="settings-actions"><button type="button" class="outline settings-clear" id="resetSupabaseSettings">清除本機設定</button><button class="primary" type="submit">儲存並重新連線</button></div>
+  </form>
+  <p class="settings-footnote">主控端產生的邀請連結會附上公開連線資訊，玩家開啟連結就能加入；只有輸入六碼房間代碼時，需先在該裝置設定相同專案。</p>
+</dialog>
 <div id="projection" class="projection" hidden role="dialog" aria-modal="true" aria-label="投影情報卡"><button id="closeProjection" class="projection-close">✕ 離開投影</button><div id="projectionContent" class="projection-body"></div></div>
 <script src="online-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="assets/online.js?v=2.5.0" defer></script>
+<script src="assets/online.js?v=2.5.2" defer></script>
 </body></html>
