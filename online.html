@@ -4,9 +4,9 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0a2832">
 <title>606 情報局｜連線任務</title>
-<link rel="stylesheet" href="assets/online-v2.5.4.css">
+<link rel="stylesheet" href="assets/online-v2.5.6.css">
 <style id="settings-critical-style">
-/* v2.5.4：設定入口不依賴外部 CSS 的快取狀態 */
+/* v2.5.6：設定入口不依賴外部 CSS 的快取狀態 */
 .topbar{position:relative}.top-links{margin-left:auto}
 .settings-shortcut{appearance:none;-webkit-appearance:none;position:static;inset:auto;z-index:auto;box-sizing:border-box;display:inline-flex;flex-shrink:0;align-items:center;justify-content:center;gap:6px;min-height:32px;margin:0;padding:5px 10px;border:1px solid rgba(213,178,117,.52);border-radius:999px;background:rgba(19,54,65,.94);color:#e8d6b4;font-family:inherit;font-size:12px;font-weight:700;line-height:1.3;letter-spacing:.3px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);cursor:pointer;white-space:nowrap;transition:background .16s,border-color .16s}
 .settings-shortcut:hover,.settings-shortcut:focus-visible{background:#24515a;border-color:#efc98f;color:#fff0d2}
@@ -50,11 +50,37 @@
     <section id="room" hidden>
       <div class="room-heading"><div><span class="kicker">LIVE OPERATION</span><h2 id="roomHeading">機密任務</h2><p id="roomSub">等待同步……</p></div><button class="outline compact" id="homeButton">返回首頁</button></div>
       <div class="code-banner"><div><small>房間代碼</small><strong id="roomCode">——</strong></div><button id="copyInvite" class="outline compact">複製邀請連結</button><span id="liveStatus">● 已連線</span></div>
+      <section id="hostInvitePanel" class="panel invite-panel" hidden>
+        <div class="invite-panel-head"><div><span class="kicker">QUICK JOIN</span><h3>快速加入任務</h3><p>建立房間後，可直接投影 QR code 讓學生掃描加入，也可複製邀請連結分享。</p></div><button id="copyInviteSecondary" class="outline compact" type="button">複製邀請連結</button></div>
+        <div class="invite-grid">
+          <div class="invite-qr-wrap">
+            <img id="inviteQrImage" class="invite-qr-image" alt="加入房間 QR code" hidden>
+            <div id="inviteQrFallback" class="invite-qr-fallback">建立房間後，這裡會顯示可掃描的 QR code。</div>
+            <p class="hint invite-qr-hint">學生掃描後可直接帶入房間代碼與公開連線設定。</p>
+          </div>
+          <div class="invite-link-wrap">
+            <label>邀請連結
+              <textarea id="inviteLinkField" readonly rows="4" spellcheck="false" placeholder="建立房間後會自動產生邀請連結"></textarea>
+            </label>
+            <div class="invite-mini-meta">
+              <span>適合投影掃描或班級群組分享</span>
+              <span id="inviteQrStatus">等待建立房間</span>
+            </div>
+          </div>
+        </div>
+      </section>
       <section id="hostArea" hidden>
         <div class="cols">
           <article class="panel"><span class="kicker">COMMAND CENTER</span><h3 id="hostPhaseTitle">等待玩家加入</h3><p id="hostPhaseDesc"></p><div class="host-controls" id="hostControls"></div></article>
           <article class="panel"><div class="split-title"><h3>在場玩家</h3><strong id="rosterTotal">0 / 8</strong></div><div id="roster" class="roster"></div></article>
         </div>
+        <details id="roomManagement" class="panel room-management">
+          <summary><span>⚙ 房間管理</span><small>檢視狀態、管理玩家與結束房間</small></summary>
+          <div class="manage-content"><div class="manage-meta"><span id="managePhase">目前階段：—</span><span id="manageRound">第 — 輪</span></div>
+          <div id="managePlayerTip" class="manage-tip"></div>
+          <button class="danger-button" type="button" id="closeRoomButton">結束這個房間</button>
+          <p class="manage-warning">結束後所有玩家會看到關閉狀態，原房間無法再次開始。請確定已完成本次遊戲。</p>
+          </div></details>
         <div id="hostCardPreview" class="panel card-preview" hidden></div>
       </section>
       <section id="playerArea" hidden>
@@ -68,7 +94,7 @@
       </article><article class="panel"><div class="split-title"><h3>現有情報卡</h3><span id="libraryCount"></span></div><div id="cardList" class="card-list">尚無情報卡。</div></article></div>
     </section>
   </main>
-  <footer>606 INTELLIGENCE BUREAU · 連線遊戲僅同步必要資訊 · 身分與答案由伺服器保護 · v2.5.4</footer>
+  <footer>606 INTELLIGENCE BUREAU · 連線遊戲僅同步必要資訊 · 身分與答案由伺服器保護 · v2.5.6</footer>
 </div>
 <dialog id="supabaseDialog" class="settings-dialog" aria-labelledby="settingsTitle" aria-describedby="settingsIntro">
   <div class="settings-header"><div><span class="kicker">CONNECTION SETTINGS</span><h2 id="settingsTitle">Supabase 連線設定</h2></div><button type="button" class="settings-close" id="closeSupabaseSettings" aria-label="關閉設定">✕</button></div>
@@ -88,10 +114,10 @@
 <div id="projection" class="projection" hidden role="dialog" aria-modal="true" aria-label="投影情報卡"><button id="closeProjection" class="projection-close">✕ 離開投影</button><div id="projectionContent" class="projection-body"></div></div>
 <script src="online-config.js"></script>
 <script id="runtime-config-bridge">
-/* v2.5.4：將網頁儲存設定同步提供給連線核心；不需要修改部署檔。 */
+/* v2.5.6：將網頁儲存設定同步提供給連線核心；不需要修改部署檔。 */
 (() => {
   'use strict';
-  window.INTEL606_PAGE_VERSION = '2.5.4';
+  window.INTEL606_PAGE_VERSION = '2.5.5';
   const saved = (() => {
     try { return JSON.parse(localStorage.getItem('intel606_supabase_public_config_v1') || 'null'); }
     catch (_) { return null; }
@@ -113,7 +139,7 @@
 })();
 </script>
 <script id="settings-standalone-controller">
-/* v2.5.4：設定視窗獨立運作，並與遊戲共用設定資料。 */
+/* v2.5.6：設定視窗獨立運作，並與遊戲共用設定資料。 */
 (() => {
   'use strict';
   const id = name => document.getElementById(name);
@@ -198,5 +224,5 @@
 })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="assets/online-v2.5.4.js" defer></script>
+<script src="assets/online-v2.5.6.js" defer></script>
 </body></html>
