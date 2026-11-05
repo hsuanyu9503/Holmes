@@ -5,7 +5,7 @@
 <meta name="theme-color" content="#0a2832">
 <title>606 情報局｜連線任務</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="assets/online-v2.6.0-stable.css">
+<link rel="stylesheet" href="assets/online-v2.7.0-beta.css">
 <style id="settings-critical-style">
 /* v2.6.0 R1：設定入口不依賴外部 CSS 的快取狀態 */
 .topbar{position:relative}.top-links{margin-left:auto}
@@ -50,7 +50,13 @@
           <div id="discussionTimerFields" hidden><label>討論時間<select id="createDiscussionSeconds"><option value="180">3 分鐘</option><option value="300" selected>5 分鐘</option><option value="480">8 分鐘</option><option value="600">10 分鐘</option></select></label></div>
           <p class="r1-context-note">遠距正式線索、自由討論、秘密投票、臥底猜測與結算皆已開放。</p>
         </div>
-        <button class="primary" id="createRoom">建立連線房間</button><button class="outline" id="openLibrary">管理情報卡資料庫</button>
+        <div class="host-options">
+          <label class="host-option-check"><input type="checkbox" id="createHostPlays"> <span>主控端同時參與遊戲（占用一個玩家名額）</span></label>
+          <label id="hostNameLabel" hidden>主控玩家代稱<input id="createHostName" maxlength="24" placeholder="例如：情報局長"></label>
+          <label>主持方式<select id="createHostMode"><option value="manual">手動主持｜自行控制各遊戲階段</option><option value="auto">自動主持｜系統推進遠距遊戲流程</option></select></label>
+          <p class="hint" id="autoHostNote">自動主持僅適用遠距模式；近距模式仍保留手動主持。</p>
+        </div>
+        <button class="primary" id="createRoom">建立連線房間</button><button class="outline" id="openLibrary">管理情報卡資料庫</button><button class="outline" id="openMyRooms">我的房間 · 管理／恢復</button>
       </article>
       <article class="panel landing-card"><span class="kicker">AGENT ACCESS</span><h2>加入情報任務</h2><p>輸入主控端提供的六碼房間代碼。</p>
         <label>房間代碼<input id="joinCode" maxlength="6" inputmode="text" placeholder="例如 K6P3QR" autocapitalize="characters" autocomplete="off"></label>
@@ -60,6 +66,7 @@
     </section>
     <section id="room" hidden>
       <div class="room-heading"><div><span class="kicker">LIVE OPERATION</span><h2 id="roomHeading">機密任務</h2><p id="roomSub">等待同步……</p></div><button class="outline compact" id="homeButton">返回首頁</button></div>
+      <div id="hostSwitchTabs" class="host-switch-tabs" hidden><button type="button" data-host-tab="host" class="outline compact">任務指揮中心</button><button type="button" data-host-tab="player" class="outline compact">我的玩家畫面</button><span class="host-switch-hint">個人情報只會在玩家畫面展開，請避免投影</span></div>
       <div class="code-banner"><div><small>房間代碼</small><strong id="roomCode">——</strong></div><button id="copyInvite" class="outline compact">複製邀請連結</button><span id="liveStatus">● 已連線</span></div>
       <div class="operation-ribbon" role="status"><span id="roomPlayModeTag" class="operation-chip">近距任務</span><span id="roomDiscussionTag">現場討論 · 主控推進</span></div>
       <section id="hostInvitePanel" class="panel invite-panel" hidden>
@@ -88,7 +95,7 @@
         </div>
         <details id="roomManagement" class="panel room-management">
           <summary><span>⚙ 房間管理</span><small>檢視狀態、管理玩家與結束房間</small></summary>
-          <div class="manage-content"><div class="manage-meta"><span id="managePhase">目前階段：—</span><span id="manageRound">第 — 輪</span></div>
+          <div class="manage-content"><button class="outline compact" type="button" id="openMyRoomsInGame">我的房間 · 管理歷史房間</button><div class="manage-meta"><span id="managePhase">目前階段：—</span><span id="manageRound">第 — 輪</span></div>
           <div id="managePlayerTip" class="manage-tip"></div><div id="managePlayerList" class="manage-player-list" aria-live="polite"></div>
           <button class="danger-button" type="button" id="closeRoomButton">結束這個房間</button>
           <p class="manage-warning">結束後所有玩家會看到關閉狀態，原房間無法再次開始。請確定已完成本次遊戲。</p>
@@ -100,14 +107,20 @@
       </section>
     </section>
     <section id="library" hidden>
-      <div class="room-heading"><div><span class="kicker">INTELLIGENCE ARCHIVE</span><h2>情報卡資料庫</h2><p>依照 3×3 或 4×4 管理卡片類型、名稱與格子內容。每張卡可獨立啟用或停用。</p></div><button class="outline compact" id="closeLibrary">返回任務</button></div>
+      <div class="room-heading"><div><span class="kicker">INTELLIGENCE ARCHIVE</span><h2>情報卡資料庫</h2><p>設定9項或16項情報內容，不必安排固定位置；每次抽卡由 Supabase 重新亂數排列位置。</p></div><button class="outline compact" id="closeLibrary">返回任務</button></div>
       <div class="cols"><article class="panel"><h3 id="editTitle">新增情報卡</h3>
-        <form id="cardForm"><input type="hidden" id="cardId"><label>宮格模式<select id="cardSize"><option value="3">3 × 3</option><option value="4">4 × 4</option></select></label><label>情報卡類型<input id="cardCategory" required maxlength="40" placeholder="例如：自然科學、成語、地理"></label><label>情報卡名稱<input id="cardTitle" required maxlength="80" placeholder="例如：校園科學偵查"></label><div class="split-title"><h4>格子內容</h4><small>依畫面由左至右、由上而下填寫</small></div><div id="cellEditor" class="cell-editor"></div><label class="checkline"><input type="checkbox" id="cardActive" checked>啟用此張情報卡</label><button class="primary" type="submit">儲存情報卡</button><button class="outline" type="button" id="clearCard">清空編輯表單</button></form>
+        <form id="cardForm"><input type="hidden" id="cardId"><label>宮格模式<select id="cardSize"><option value="3">3 × 3</option><option value="4">4 × 4</option></select></label><label>情報卡類型<input id="cardCategory" required maxlength="40" placeholder="例如：自然科學、成語、地理"></label><label>情報卡名稱<input id="cardTitle" required maxlength="80" placeholder="例如：校園科學偵查"></label><div class="split-title"><h4>情報內容清單</h4><small>只要輸入完整9或16項，實際位置每輪重新洗牌</small></div><div id="cellEditor" class="cell-editor"></div><label class="checkline"><input type="checkbox" id="cardActive" checked>啟用此張情報卡</label><button class="primary" type="submit">儲存情報卡</button><button class="outline" type="button" id="clearCard">清空編輯表單</button></form>
       </article><article class="panel"><div class="split-title"><h3>現有情報卡</h3><span id="libraryCount"></span></div><div id="cardList" class="card-list">尚無情報卡。</div></article></div>
     </section>
   </main>
-  <footer>606 INTELLIGENCE BUREAU · 連線遊戲僅同步必要資訊 · 身分與答案由伺服器保護 · v2.6.0 Stable</footer>
+  <footer>606 INTELLIGENCE BUREAU · 連線遊戲僅同步必要資訊 · 身分與答案由伺服器保護 · v2.7.0 Beta</footer>
 </div>
+<dialog id="myRoomsDialog" class="settings-dialog my-rooms-dialog" aria-labelledby="myRoomsTitle">
+  <div class="settings-header"><div><span class="kicker">ROOM ARCHIVE</span><h2 id="myRoomsTitle">我的房間</h2></div><button class="settings-close" id="closeMyRooms" type="button" aria-label="關閉房間管理">✕</button></div>
+  <p class="settings-intro">你可以重新進入未結束的房間，或關閉忘記結束的房間。只有已關閉的房間才能永久刪除，且無法復原。</p>
+  <div id="myRoomsList" class="my-rooms-list" aria-live="polite">正在讀取……</div>
+  <button id="refreshMyRooms" class="outline compact" type="button">重新整理房間清單</button>
+</dialog>
 <dialog id="supabaseDialog" class="settings-dialog" aria-labelledby="settingsTitle" aria-describedby="settingsIntro">
   <div class="settings-header"><div><span class="kicker">CONNECTION SETTINGS</span><h2 id="settingsTitle">Supabase 連線設定</h2></div><button type="button" class="settings-close" id="closeSupabaseSettings" aria-label="關閉設定">✕</button></div>
   <p id="settingsIntro" class="settings-intro">在這裡設定連線資料庫，無須編輯程式檔案。設定儲存在這台裝置的瀏覽器中。綠色狀態點代表已填入設定，實際連線結果以下方提示為準。</p>
@@ -237,5 +250,5 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
 <script src="assets/qr-local-v2.5.7.js" defer></script>
-<script src="assets/online-v2.6.0-stable.js" defer></script>
+<script src="assets/online-v2.7.0-beta.js" defer></script>
 </body></html>
