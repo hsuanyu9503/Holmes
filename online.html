@@ -4,7 +4,7 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0a2832">
 <title>606 情報局｜連線任務</title>
-<link rel="stylesheet" href="assets/online-v2.6.0-R4.css">
+<link rel="stylesheet" href="assets/online-v2.6.0-R5.css">
 <style id="settings-critical-style">
 /* v2.6.0 R1：設定入口不依賴外部 CSS 的快取狀態 */
 .topbar{position:relative}.top-links{margin-left:auto}
@@ -47,7 +47,7 @@
         <div id="remoteSetup" class="remote-setup" hidden>
           <label>自由討論方式<select id="createDiscussionMode"><option value="manual">手動結束（由主控控制）</option><option value="timed">限時討論（時間到自動結束）</option></select></label>
           <div id="discussionTimerFields" hidden><label>討論時間<select id="createDiscussionSeconds"><option value="180">3 分鐘</option><option value="300" selected>5 分鐘</option><option value="480">8 分鐘</option><option value="600">10 分鐘</option></select></label></div>
-          <p class="r1-context-note">遠距正式線索與自由討論已開放；秘密投票、臥底猜測與結算將於 R4～R5 接續。</p>
+          <p class="r1-context-note">遠距正式線索、自由討論、秘密投票、臥底猜測與結算皆已開放。</p>
         </div>
         <button class="primary" id="createRoom">建立連線房間</button><button class="outline" id="openLibrary">管理情報卡資料庫</button>
       </article>
@@ -105,7 +105,7 @@
       </article><article class="panel"><div class="split-title"><h3>現有情報卡</h3><span id="libraryCount"></span></div><div id="cardList" class="card-list">尚無情報卡。</div></article></div>
     </section>
   </main>
-  <footer>606 INTELLIGENCE BUREAU · 連線遊戲僅同步必要資訊 · 身分與答案由伺服器保護 · v2.6.0 R4</footer>
+  <footer>606 INTELLIGENCE BUREAU · 連線遊戲僅同步必要資訊 · 身分與答案由伺服器保護 · v2.6.0 R5</footer>
 </div>
 <dialog id="supabaseDialog" class="settings-dialog" aria-labelledby="settingsTitle" aria-describedby="settingsIntro">
   <div class="settings-header"><div><span class="kicker">CONNECTION SETTINGS</span><h2 id="settingsTitle">Supabase 連線設定</h2></div><button type="button" class="settings-close" id="closeSupabaseSettings" aria-label="關閉設定">✕</button></div>
@@ -236,5 +236,5 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="assets/qr-local-v2.5.7.js" defer></script>
-<script src="assets/online-v2.6.0-R4.js" defer></script>
+<script src="assets/online-v2.6.0-R5.js" defer></script>
 </body></html>
