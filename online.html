@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0a2832">
+<title>606 情報局｜連線任務</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="assets/online-v2.6.0-stable.css">
+<style id="settings-critical-style">
+/* v2.6.0 R1：設定入口不依賴外部 CSS 的快取狀態 */
+.topbar{position:relative}.top-links{margin-left:auto}
+.settings-shortcut{appearance:none;-webkit-appearance:none;position:static;inset:auto;z-index:auto;box-sizing:border-box;display:inline-flex;flex-shrink:0;align-items:center;justify-content:center;gap:6px;min-height:32px;margin:0;padding:5px 10px;border:1px solid rgba(213,178,117,.52);border-radius:999px;background:rgba(19,54,65,.94);color:#e8d6b4;font-family:inherit;font-size:12px;font-weight:700;line-height:1.3;letter-spacing:.3px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);cursor:pointer;white-space:nowrap;transition:background .16s,border-color .16s}
+.settings-shortcut:hover,.settings-shortcut:focus-visible{background:#24515a;border-color:#efc98f;color:#fff0d2}
+.settings-shortcut:focus-visible{outline:2px solid #f2d194;outline-offset:3px}
+.settings-icon{font-size:14px;line-height:1}.settings-dot{height:7px;width:7px;border-radius:50%;background:#d5a567;flex:none}.settings-dot.configured{background:#82cfaa;box-shadow:0 0 5px #5aaf86aa}
+.settings-dialog{box-sizing:border-box;width:min(520px,calc(100% - 28px));max-height:min(92dvh,750px);overflow:auto;padding:25px;color:#f4ead5;border-radius:20px;border:1px solid #c6a573;background:linear-gradient(155deg,#19434a,#071f2a 88%);box-shadow:0 22px 90px #020b11cf;font:inherit;line-height:1.65}
+.settings-dialog::backdrop{background:rgba(2,10,15,.78);backdrop-filter:blur(4px)}
+.settings-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.settings-header h2{font-family:Georgia,'Noto Serif TC',serif;font-size:25px;margin:4px 0 0;color:#f4dfb7;line-height:1.4}
+.settings-close{height:34px;width:34px;flex:none;border:1px solid #b49a737a;border-radius:10px;background:#244450;color:#e9cfab;font-size:16px;cursor:pointer}
+.settings-intro{margin:10px 0 13px;font-size:13px;color:#c6d2ca}.settings-source{display:inline-flex;padding:5px 10px;border:1px solid #a9ba9c60;border-radius:999px;color:#d8dfcd;background:#35534a55;font-size:12px;margin-bottom:10px}
+.settings-dialog label{display:block;font-size:13px;font-weight:800;color:#e9dabc;margin:11px 0 6px}.settings-dialog input{display:block;width:100%;min-width:0;height:44px;border:1px solid #9a9778aa;border-radius:10px;background:#071f2a;color:#fdf5df;font-size:14px;padding:10px 12px;font-family:inherit}
+.settings-dialog input::placeholder{color:#9badaa}.settings-key-row{display:flex;align-items:stretch;gap:7px}.settings-key-row input{flex:1}.settings-reveal{flex:none;border:1px solid #9a9778aa;border-radius:9px;background:#183e49;color:#eddec0;font-size:12px;padding:6px 10px;cursor:pointer}
+.settings-warning{font-size:12px;line-height:1.7;margin:15px 0 8px;color:#ead1a0;background:#76512c35;border:1px solid #b88e4f5c;border-radius:11px;padding:10px 12px}.settings-warning strong{color:#ffe0b7}.settings-error{color:#ffdad0;background:#74372952;border:1px solid #ce786b8a;border-radius:9px;padding:9px 11px;font-size:12px}
+.settings-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:9px;margin:21px 0 10px}.settings-actions button{font-size:13px;min-height:43px;cursor:pointer}.settings-actions .settings-clear{margin-right:auto}.settings-footnote{font-size:11px;color:#afc0b9;margin:12px 0 0;padding-top:13px;border-top:1px solid #8b997754}
+@media(max-width:800px){.topbar{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:'brand config' 'links links';height:auto;min-height:104px;gap:8px;padding:12px 0}.topbar>.brand{grid-area:brand;min-width:0}.topbar>.top-links{grid-area:links;margin:0;justify-content:flex-end}.topbar>.settings-shortcut{grid-area:config;justify-self:end}}
+@media(max-width:560px){.shell{padding:0 14px}.settings-shortcut{font-size:11px;padding:5px 9px;min-height:31px}.brand{gap:8px}.brand img{width:43px;height:43px}.brand strong{font-size:16px;letter-spacing:2px}.brand small{font-size:9px;letter-spacing:1.3px}.top-links a,.top-links span{font-size:12px;padding:6px 11px}.settings-dialog{padding:19px}.settings-header h2{font-size:22px}.settings-actions{display:grid;grid-template-columns:1fr}.settings-actions button{width:100%}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="topbar">
+    <a class="brand" href="index.html"><img src="assets/crest-header.webp" width="52" height="52" alt=""><span><strong>606 情報局</strong><small>DETECTIVE ACADEMY</small></span></a>
+    <div class="top-links"><a href="index.html">單機模式</a><span aria-current="page">連線模式</span></div>
+    <button class="settings-shortcut" id="openSupabaseSettings" data-always="true" type="button" aria-label="開啟 Supabase 連線設定" aria-haspopup="dialog" aria-controls="supabaseDialog" title="開啟 Supabase 連線設定"><span class="settings-dot" id="settingsDot" aria-hidden="true"></span><span class="settings-icon" aria-hidden="true">⚙</span><span class="settings-label">連線設定</span></button>
+  </header>
+  <section class="masthead"><span class="eyebrow">SECURE CHANNEL · CLASSIFIED</span><h1>606 情報局 <em>連線任務</em></h1><p>各自查看私人身分卡，分享情報線索，一起找出潛伏其中的局外人。</p></section>
+  <div id="alert" class="alert" role="status" hidden></div>
+  <div id="loading" class="loading">正在建立安全連線……</div>
+  <main id="app" hidden>
+    <section id="landing" class="landing">
+      <article class="panel landing-card"><span class="kicker">MISSION COMMAND</span><h2>建立機密房間</h2><p>主控端負責任務配置、情報卡管理與公開揭曉。</p>
+        <label>情報表尺寸<select id="createSize"><option value="3">3 × 3 · 9 格</option><option value="4">4 × 4 · 16 格</option></select></label>
+        <fieldset class="mode-selection" aria-label="選擇連線遊戲方式">
+          <legend>遊戲方式</legend>
+          <label class="mode-card"><input type="radio" name="createPlayMode" value="near" checked><span><strong>近距任務</strong><small>現場口頭發言、討論與投票（沿用原有流程）</small></span></label>
+          <label class="mode-card"><input type="radio" name="createPlayMode" value="remote"><span><strong>遠距任務</strong><small>線上文字線索與投票（R1 基礎版，互動將分階段開放）</small></span></label>
+        </fieldset>
+        <div id="remoteSetup" class="remote-setup" hidden>
+          <label>自由討論方式<select id="createDiscussionMode"><option value="manual">手動結束（由主控控制）</option><option value="timed">限時討論（時間到自動結束）</option></select></label>
+          <div id="discussionTimerFields" hidden><label>討論時間<select id="createDiscussionSeconds"><option value="180">3 分鐘</option><option value="300" selected>5 分鐘</option><option value="480">8 分鐘</option><option value="600">10 分鐘</option></select></label></div>
+          <p class="r1-context-note">遠距正式線索、自由討論、秘密投票、臥底猜測與結算皆已開放。</p>
+        </div>
+        <button class="primary" id="createRoom">建立連線房間</button><button class="outline" id="openLibrary">管理情報卡資料庫</button>
+      </article>
+      <article class="panel landing-card"><span class="kicker">AGENT ACCESS</span><h2>加入情報任務</h2><p>輸入主控端提供的六碼房間代碼。</p>
+        <label>房間代碼<input id="joinCode" maxlength="6" inputmode="text" placeholder="例如 K6P3QR" autocapitalize="characters" autocomplete="off"></label>
+        <label>情報員代稱<input id="joinName" maxlength="24" placeholder="例如：小偵探" autocomplete="nickname"></label>
+        <button class="primary" id="joinRoom">加入房間</button>
+      </article>
+    </section>
+    <section id="room" hidden>
+      <div class="room-heading"><div><span class="kicker">LIVE OPERATION</span><h2 id="roomHeading">機密任務</h2><p id="roomSub">等待同步……</p></div><button class="outline compact" id="homeButton">返回首頁</button></div>
+      <div class="code-banner"><div><small>房間代碼</small><strong id="roomCode">——</strong></div><button id="copyInvite" class="outline compact">複製邀請連結</button><span id="liveStatus">● 已連線</span></div>
+      <div class="operation-ribbon" role="status"><span id="roomPlayModeTag" class="operation-chip">近距任務</span><span id="roomDiscussionTag">現場討論 · 主控推進</span></div>
+      <section id="hostInvitePanel" class="panel invite-panel" hidden>
+        <div class="invite-panel-head"><div><span class="kicker">QUICK JOIN</span><h3>快速加入任務</h3><p>建立房間後，可直接投影 QR code 讓學生掃描加入，也可複製邀請連結分享。</p></div><button id="copyInviteSecondary" class="outline compact" type="button">複製邀請連結</button></div>
+        <div class="invite-grid">
+          <div class="invite-qr-wrap">
+            <img id="inviteQrImage" class="invite-qr-image" alt="加入房間 QR code" hidden>
+            <div id="inviteQrFallback" class="invite-qr-fallback">建立房間後，這裡會顯示可掃描的 QR code。</div>
+            <p class="hint invite-qr-hint">學生掃描後可直接帶入房間代碼與公開連線設定。</p>
+          </div>
+          <div class="invite-link-wrap">
+            <label>邀請連結
+              <textarea id="inviteLinkField" readonly rows="4" spellcheck="false" placeholder="建立房間後會自動產生邀請連結"></textarea>
+            </label>
+            <div class="invite-mini-meta">
+              <span>適合投影掃描或班級群組分享</span>
+              <span id="inviteQrStatus">等待建立房間</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="hostArea" hidden>
+        <div class="cols">
+          <article class="panel"><span class="kicker">COMMAND CENTER</span><h3 id="hostPhaseTitle">等待玩家加入</h3><p id="hostPhaseDesc"></p><div class="host-controls" id="hostControls"></div></article>
+          <article class="panel"><div class="split-title"><h3>在場玩家</h3><strong id="rosterTotal">0 / 8</strong></div><div id="roster" class="roster"></div></article>
+        </div>
+        <details id="roomManagement" class="panel room-management">
+          <summary><span>⚙ 房間管理</span><small>檢視狀態、管理玩家與結束房間</small></summary>
+          <div class="manage-content"><div class="manage-meta"><span id="managePhase">目前階段：—</span><span id="manageRound">第 — 輪</span></div>
+          <div id="managePlayerTip" class="manage-tip"></div><div id="managePlayerList" class="manage-player-list" aria-live="polite"></div>
+          <button class="danger-button" type="button" id="closeRoomButton">結束這個房間</button>
+          <p class="manage-warning">結束後所有玩家會看到關閉狀態，原房間無法再次開始。請確定已完成本次遊戲。</p>
+          </div></details>
+        <div id="hostCardPreview" class="panel card-preview" hidden></div>
+      </section>
+      <section id="playerArea" hidden>
+        <article class="panel player-panel"><span class="kicker">YOUR CLASSIFIED DOSSIER</span><h3 id="playerPhaseTitle"></h3><p id="playerPhaseDesc"></p><div id="playerContents"></div></article>
+      </section>
+    </section>
+    <section id="library" hidden>
+      <div class="room-heading"><div><span class="kicker">INTELLIGENCE ARCHIVE</span><h2>情報卡資料庫</h2><p>依照 3×3 或 4×4 管理卡片類型、名稱與格子內容。每張卡可獨立啟用或停用。</p></div><button class="outline compact" id="closeLibrary">返回任務</button></div>
+      <div class="cols"><article class="panel"><h3 id="editTitle">新增情報卡</h3>
+        <form id="cardForm"><input type="hidden" id="cardId"><label>宮格模式<select id="cardSize"><option value="3">3 × 3</option><option value="4">4 × 4</option></select></label><label>情報卡類型<input id="cardCategory" required maxlength="40" placeholder="例如：自然科學、成語、地理"></label><label>情報卡名稱<input id="cardTitle" required maxlength="80" placeholder="例如：校園科學偵查"></label><div class="split-title"><h4>格子內容</h4><small>依畫面由左至右、由上而下填寫</small></div><div id="cellEditor" class="cell-editor"></div><label class="checkline"><input type="checkbox" id="cardActive" checked>啟用此張情報卡</label><button class="primary" type="submit">儲存情報卡</button><button class="outline" type="button" id="clearCard">清空編輯表單</button></form>
+      </article><article class="panel"><div class="split-title"><h3>現有情報卡</h3><span id="libraryCount"></span></div><div id="cardList" class="card-list">尚無情報卡。</div></article></div>
+    </section>
+  </main>
+  <footer>606 INTELLIGENCE BUREAU · 連線遊戲僅同步必要資訊 · 身分與答案由伺服器保護 · v2.6.0 Stable</footer>
+</div>
+<dialog id="supabaseDialog" class="settings-dialog" aria-labelledby="settingsTitle" aria-describedby="settingsIntro">
+  <div class="settings-header"><div><span class="kicker">CONNECTION SETTINGS</span><h2 id="settingsTitle">Supabase 連線設定</h2></div><button type="button" class="settings-close" id="closeSupabaseSettings" aria-label="關閉設定">✕</button></div>
+  <p id="settingsIntro" class="settings-intro">在這裡設定連線資料庫，無須編輯程式檔案。設定儲存在這台裝置的瀏覽器中。綠色狀態點代表已填入設定，實際連線結果以下方提示為準。</p>
+  <div id="configSource" class="settings-source" role="status"></div>
+  <form id="supabaseForm" autocomplete="off">
+    <label for="supabaseUrl">Project URL</label>
+    <input id="supabaseUrl" name="supabaseUrl" type="url" inputmode="url" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="https://your-project.supabase.co" required>
+    <label for="supabaseKey">Publishable key／Anon key</label>
+    <div class="settings-key-row"><input id="supabaseKey" name="supabaseKey" type="password" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="sb_publishable_..." required><button id="toggleKeyVisible" class="settings-reveal" type="button" aria-pressed="false">顯示</button></div>
+    <p class="settings-warning">只可填公開的 <strong>publishable key</strong> 或舊版 <strong>anon key</strong>。請勿輸入 <strong>secret／service_role 金鑰</strong>、資料庫密碼或個人帳密。</p>
+    <p id="settingsError" class="settings-error" role="alert" hidden></p>
+    <div class="settings-actions"><button type="button" class="outline settings-clear" id="resetSupabaseSettings">清除本機設定</button><button class="primary" type="submit">儲存並重新連線</button></div>
+  </form>
+  <p class="settings-footnote">主控端產生的邀請連結會附上公開連線資訊，玩家開啟連結就能加入；只有輸入六碼房間代碼時，需先在該裝置設定相同專案。</p>
+</dialog>
+<div id="projection" class="projection" hidden role="dialog" aria-modal="true" aria-label="投影情報卡"><button id="closeProjection" class="projection-close">✕ 離開投影</button><div id="projectionContent" class="projection-body"></div></div>
+<script src="online-config.js"></script>
+<script id="runtime-config-bridge">
+/* v2.6.0 R1：將網頁儲存設定同步提供給連線核心；不需要修改部署檔。 */
+(() => {
+  'use strict';
+  window.INTEL606_PAGE_VERSION = '2.5.7';
+  const saved = (() => {
+    try { return JSON.parse(localStorage.getItem('intel606_supabase_public_config_v1') || 'null'); }
+    catch (_) { return null; }
+  })();
+  if (!saved || typeof saved !== 'object') return;
+  const url = String(saved.url || '').trim().replace(/\/$/, '');
+  const key = String(saved.publishableKey || '').trim();
+  if (!/^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(url)) return;
+  let allowed = /^sb_publishable_[a-z0-9_-]+$/i.test(key);
+  if (!allowed && /^[a-z0-9_-]+\.[a-z0-9_-]+\.[a-z0-9_-]+$/i.test(key)) {
+    try {
+      const middle = key.split('.')[1];
+      const payload = JSON.parse(atob(middle.replace(/-/g,'+').replace(/_/g,'/') + '='.repeat((4-middle.length%4)%4)));
+      allowed = payload.role === 'anon';
+    } catch (_) {allowed = false;}
+  }
+  if (!allowed) return;
+  window.INTEL606_SUPABASE = {url, publishableKey:key};
+})();
+</script>
+<script id="settings-standalone-controller">
+/* v2.6.0 R1：設定視窗獨立運作，並與遊戲共用設定資料。 */
+(() => {
+  'use strict';
+  const id = name => document.getElementById(name);
+  const KEY = 'intel606_supabase_public_config_v1';
+  const button = id('openSupabaseSettings');
+  const dialog = id('supabaseDialog');
+  const errorEl = id('settingsError');
+  function normalize(data) {
+    if (!data || typeof data !== 'object') return null;
+    const url = String(data.url || '').trim().replace(/\/$/, '');
+    const publishableKey = String(data.publishableKey || '').trim();
+    if (!/^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(url)) return null;
+    if (/^sb_publishable_[a-z0-9_-]+$/i.test(publishableKey)) return {url,publishableKey};
+    if (/^[a-z0-9_-]+\.[a-z0-9_-]+\.[a-z0-9_-]+$/i.test(publishableKey)) {
+      try {
+        const p = publishableKey.split('.')[1];
+        const payload = JSON.parse(atob(p.replace(/-/g,'+').replace(/_/g,'/') + '='.repeat((4-p.length%4)%4)));
+        if (payload.role === 'anon') return {url,publishableKey};
+      } catch (_) { /* 拒絕無效的 JWT */ }
+    }
+    return null;
+  }
+  function stored() {
+    try {return normalize(JSON.parse(localStorage.getItem(KEY) || 'null'));} catch (_) {return null;}
+  }
+  function config() {return stored() || normalize(window.INTEL606_SUPABASE || {});}
+  function setError(message) {errorEl.textContent=message; errorEl.hidden=!message;}
+  function refreshStatus() {
+    const configured=Boolean(config());
+    id('settingsDot').classList.toggle('configured',configured);
+    button.title=configured?'Supabase 已設定 · 點此檢視或修改':'尚未設定 Supabase · 點此設定';
+  }
+  function open(e) {
+    if(e){e.preventDefault();e.stopImmediatePropagation();}
+    const actual=config();
+    id('supabaseUrl').value=actual?.url || '';
+    id('supabaseKey').value=actual?.publishableKey || '';
+    id('supabaseKey').type='password';
+    id('toggleKeyVisible').textContent='顯示';
+    id('toggleKeyVisible').setAttribute('aria-pressed','false');
+    id('configSource').textContent=actual?'● 已設定 · '+(stored()?'本機設定':'預設檔案'):'○ 尚未設定';
+    setError('');
+    if (!dialog.open) { if (typeof dialog.showModal === 'function') dialog.showModal(); else dialog.setAttribute('open',''); }
+  }
+  function close(e) {
+    if(e){e.preventDefault();e.stopImmediatePropagation();}
+    if (dialog.open) {if(typeof dialog.close === 'function') dialog.close(); else dialog.removeAttribute('open');}
+    button.focus();
+  }
+  function save(e) {
+    e.preventDefault();e.stopImmediatePropagation();
+    const incoming=normalize({url:id('supabaseUrl').value,publishableKey:id('supabaseKey').value});
+    if (!incoming) {setError('請填入有效的 Supabase Project URL，以及公開的 publishable key 或 anon key；不可使用 secret／service_role 金鑰。');return;}
+    const previous=config();
+    try {
+      localStorage.setItem(KEY, JSON.stringify(incoming));
+      if (!previous || previous.url!==incoming.url || previous.publishableKey!==incoming.publishableKey) localStorage.removeItem('intel606_last_room');
+    } catch (_) {setError('無法儲存設定，請確認瀏覽器允許本機儲存。');return;}
+    location.reload();
+  }
+  function clear(e) {
+    e.preventDefault();e.stopImmediatePropagation();
+    if (!stored()) {setError('目前沒有另外儲存在這台裝置的連線設定。');return;}
+    if (!confirm('確定清除這台裝置的 Supabase 設定？若部署檔有預設設定，清除後會改用預設值。'))return;
+    try {localStorage.removeItem(KEY);localStorage.removeItem('intel606_last_room');}
+    catch (_) {setError('無法清除設定，請檢查瀏覽器儲存權限。');return;}
+    location.reload();
+  }
+  button.addEventListener('click',open,true);
+  id('closeSupabaseSettings').addEventListener('click',close,true);
+  id('supabaseForm').addEventListener('submit',save,true);
+  id('resetSupabaseSettings').addEventListener('click',clear,true);
+  id('toggleKeyVisible').addEventListener('click',e=>{
+    e.preventDefault();e.stopImmediatePropagation();
+    const input=id('supabaseKey');const revealed=input.type==='password';
+    input.type=revealed?'text':'password';e.currentTarget.textContent=revealed?'隱藏':'顯示';
+    e.currentTarget.setAttribute('aria-pressed',String(revealed));
+  },true);
+  dialog.addEventListener('click',e=>{if(e.target===dialog)close(e);},true);
+  refreshStatus();
+  window.INTEL606_SETTINGS_UI={refreshStatus};
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
+<script src="assets/qr-local-v2.5.7.js" defer></script>
+<script src="assets/online-v2.6.0-stable.js" defer></script>
+</body></html>
