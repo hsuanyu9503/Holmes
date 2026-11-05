@@ -1,0 +1,162 @@
+/* 606情報局 v2.4.21｜代號公開頁面（原始使用者素材）
+ * 與臥底公開分開管理；圖片本身包含偵探圖像與金色圓框，禁止再次疊加徽章。
+ * 桌機使用整張使用者素材，手機使用由同張素材裁切的上半部，另置大字資訊卡。
+ */
+#roleAnswerView .reveal-dossier.reveal-answer.answer-reveal-card {
+  box-sizing: border-box;
+  container: answer-reveal / inline-size;
+  position: relative;
+  isolation: isolate;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1536 / 1024;
+  height: auto;
+  min-height: 0;
+  margin: 15px 0 23px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 16px;
+  background: #142e37 url('./answer-reveal-integrated.webp') center / 100% 100% no-repeat;
+  box-shadow: 0 16px 32px rgba(7,23,31,.25);
+  text-align: center;
+}
+#roleAnswerView .answer-reveal-card::before,
+#roleAnswerView .answer-reveal-card::after { content: none; display: none; }
+#roleAnswerView .answer-reveal-mobile-visual { display: none; }
+/* Position relative to the original 1536 × 1024 artwork, not the browser viewport. */
+#roleAnswerView .answer-reveal-message {
+  position: absolute;
+  z-index: 2;
+  box-sizing: border-box;
+  top: 60.1%;
+  left: 20.5%;
+  width: 59%;
+  height: 18.1%;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+#roleAnswerView .answer-reveal-card .reveal-answer-title {
+  box-sizing: border-box;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 5%; left: 4%;
+  width: 92%; height: 28%;
+  max-width: none;
+  margin: 0; padding: 0;
+  transform: none;
+  background: transparent;
+  border: 0;
+  color: #6e563a;
+  font: 850 clamp(11px, 2.15cqw, 21px)/1.2 'Noto Sans TC','Microsoft JhengHei',sans-serif;
+  text-align: center;
+  text-shadow: none;
+  white-space: nowrap;
+}
+#roleAnswerView .answer-reveal-card .reveal-secret-code,
+body.is-projecting #roleAnswerView .answer-reveal-card .reveal-secret-code {
+  box-sizing: border-box;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 34%; left: 4%;
+  width: 92%; height: 62%;
+  max-width: none;
+  margin: 0; padding: 0;
+  transform: none;
+  background: transparent;
+  border: 0; box-shadow: none;
+  color: #214a50;
+  font: 900 clamp(34px, 7.5cqw, 76px)/1.0 Georgia,'Noto Serif TC',serif;
+  letter-spacing: .02em;
+  white-space: nowrap;
+  text-align: center;
+  text-shadow: none;
+}
+/* Blue bottom plaque stays empty by design: this stage does not mention the undercover. */
+@media (max-width: 640px) {
+  #roleAnswerView .reveal-dossier.reveal-answer.answer-reveal-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    aspect-ratio: auto;
+    margin: 12px 0 18px;
+    padding: 0 12px 16px;
+    border: 1px solid #b89a64;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #153039;
+    box-shadow: 0 12px 26px rgba(6,25,30,.22);
+  }
+  #roleAnswerView .answer-reveal-card .answer-reveal-mobile-visual {
+    order: 0;
+    display: block;
+    flex: none;
+    position: relative;
+    width: calc(100% + 24px);
+    height: auto;
+    aspect-ratio: 5 / 4;
+    margin: 0 -12px;
+    background: #163742 url('./answer-reveal-mobile-art.webp') center 48% / cover no-repeat;
+    border: 0;
+    box-shadow: none;
+  }
+  #roleAnswerView .answer-reveal-card .answer-reveal-message {
+    position: relative;
+    order: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    top: auto; left: auto;
+    width: 100%; max-width: 440px;
+    height: auto;
+    min-height: 111px;
+    margin: 10px auto 0;
+    padding: 9px 12px 13px;
+    border: 2px solid #bf9a60;
+    border-radius: 14px;
+    background: linear-gradient(145deg,#fff4dc,#ead4a9);
+    box-shadow: inset 0 0 0 3px rgba(255,251,239,.55);
+  }
+  #roleAnswerView .answer-reveal-card .answer-reveal-message .reveal-answer-title {
+    position: relative;
+    display: block;
+    top: auto;left: auto;
+    width: 100%;height: auto;
+    max-width: 100%;
+    margin: 0 0 5px;
+    padding: 0;
+    font-size: clamp(12px,3.7vw,16px);
+    line-height: 1.4;
+    white-space: normal;
+    color: #6a5539;
+    transform: none;
+  }
+  #roleAnswerView .answer-reveal-card .answer-reveal-message .reveal-secret-code,
+  body.is-projecting #roleAnswerView .answer-reveal-card .answer-reveal-message .reveal-secret-code {
+    position: relative;
+    display: block;
+    top: auto;left: auto;
+    width: 100%;height: auto;
+    margin: 0;
+    padding: 0;
+    transform: none;
+    font-size: clamp(43px,11vw,60px);
+    line-height: 1.13;
+    color: #214a50;
+  }
+}
+@media (prefers-reduced-motion:reduce) {
+  #roleAnswerView .answer-reveal-card {animation: none !important;}
+}

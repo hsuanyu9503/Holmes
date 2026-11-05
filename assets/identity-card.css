@@ -1,0 +1,164 @@
+/* 606情報局 v2.4.16｜角色卡整合素材專用樣式
+   兩張人物肖像與金色裝飾已合成至主視覺底圖；僅動態文字由 HTML 疊加。
+   1086×1448 固定比例，按卡片寬度同比例縮放。 */
+#roleIdentityCard.identity-card {
+  --card-ink: #21494c;
+  container: identity-card / inline-size;
+  display: block;
+  position: relative;
+  isolation: isolate;
+  width: min(100%, 460px);
+  max-width: none;
+  min-height: 0;
+  height: auto;
+  aspect-ratio: 1086 / 1448;
+  padding: 0;
+  margin: 16px auto 20px;
+  overflow: visible;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: url('./agent-card-integrated.webp') center center / 100% 100% no-repeat;
+  text-align: center;
+  animation: card-pop .28s ease-out;
+}
+#roleIdentityCard.identity-card.is-chameleon {
+  --card-ink: #713b4d;
+  background-image: url('./undercover-card-integrated.webp');
+}
+#roleIdentityCard.identity-card::before,
+#roleIdentityCard.identity-card::after { content: none; display: none; }
+#roleIdentityCard .identity-portrait-frame,
+#roleIdentityCard .identity-decoration,
+#roleIdentityCard .identity-icon,
+#roleIdentityCard .identity-classification,
+#roleIdentityCard .portrait-orbit { display: none !important; }
+/* Reusable normalized positioning: set optical centring per illustration. */
+#roleIdentityCard .identity-title,
+#roleIdentityCard .identity-code-box,
+#roleIdentityCard .identity-player-label {
+  box-sizing: border-box;
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  transform: none;
+  text-align: center;
+  white-space: nowrap;
+}
+/* The dark ribbon lies around y=52%–57% in the composited illustration. */
+#roleIdentityCard .identity-title {
+  top: 51.6%;
+  left: 18%;
+  width: 64%;
+  height: 5.0%;
+  color: #fff1c6;
+  font: 900 clamp(15px, 5.4cqw, 25px)/1.05 'Noto Serif TC','PMingLiU',serif;
+  letter-spacing: .01em;
+  text-shadow: 0 2px 4px rgba(0,0,0,.48);
+}
+#roleIdentityCard.is-chameleon .identity-title { top: 52.35%; }
+/* Only the dynamic label and secret code inside the natural parchment panel. */
+#roleIdentityCard .identity-code-box {
+  top: 63.7%;
+  left: 19%;
+  width: 62%;
+  height: 13.5%;
+  flex-direction: column;
+  gap: clamp(2px, .65cqw, 5px);
+}
+#roleIdentityCard.is-chameleon .identity-code-box {
+  top: 64.45%;
+  left: 19%;
+  width: 62%;
+  height: 13.4%;
+}
+#roleIdentityCard .identity-code-label {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  font: 850 clamp(9px, 2.7cqw, 14px)/1.25 'Noto Sans TC','Microsoft JhengHei',sans-serif;
+  letter-spacing: .01em;
+  color: #6b5538;
+  text-shadow: none;
+  white-space: nowrap;
+}
+#roleIdentityCard .identity-coordinate,
+#roleIdentityCard.is-chameleon .identity-coordinate {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  color: var(--card-ink);
+  font: 900 clamp(34px, 12.1cqw, 57px)/1.02 Georgia,'Noto Serif TC',serif;
+  letter-spacing: .025em;
+  text-shadow: none;
+  white-space: nowrap;
+}
+/* Individual nameplate centres differ slightly across blue and red art. */
+#roleIdentityCard .identity-player-label {
+  top: 83.95%;
+  left: 22%;
+  width: 56%;
+  height: 4.7%;
+  color: #fdf0c9;
+  font: 900 clamp(12px, 4.0cqw, 19px)/1.08 'Noto Serif TC','PMingLiU',serif;
+  letter-spacing: .01em;
+  text-shadow: 0 1px 3px rgba(0,0,0,.56);
+}
+#roleIdentityCard.is-chameleon .identity-player-label {
+  top: 87.2%;
+  left: 22%;
+  width: 56%;
+  height: 4.4%;
+}
+/* The explanatory paragraph is outside the card and wraps naturally. */
+#roleRevealView .role-card-guidance {
+  display: block;
+  box-sizing: border-box;
+  width: min(100%, 460px);
+  min-height: 0;
+  margin: 0 auto 22px;
+  padding: 12px 17px;
+  border: 1px solid #d4bb87;
+  border-radius: 13px;
+  background: linear-gradient(145deg,#fff9ed,#f1e3c7);
+  color: #27424b;
+  text-align: center;
+  font: 700 clamp(12px, 3.2vw, 14px)/1.6 'Noto Sans TC','Microsoft JhengHei',sans-serif;
+  overflow-wrap: break-word;
+  white-space: normal;
+  box-shadow: 0 3px 12px rgba(56,43,20,.08);
+}
+@media (max-width:560px) {
+  #roleIdentityCard.identity-card {
+    width: min(100%, 405px);
+    margin: 10px auto 17px;
+  }
+  #roleIdentityCard .identity-title {
+    font-size: clamp(14px, 5.35cqw, 21px);
+  }
+  #roleIdentityCard .identity-code-label {
+    font-size: clamp(9px, 2.65cqw, 12px);
+  }
+  #roleIdentityCard .identity-coordinate,
+  #roleIdentityCard.is-chameleon .identity-coordinate {
+    font-size: clamp(31px, 11.5cqw, 47px);
+  }
+  #roleIdentityCard .identity-player-label {
+    font-size: clamp(11px, 3.95cqw, 16px);
+  }
+  #roleRevealView .role-card-guidance { padding: 10px 13px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  #roleIdentityCard.identity-card { animation:none !important; }
+}
