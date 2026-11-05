@@ -5,7 +5,7 @@
 <meta name="theme-color" content="#0a2832">
 <title>606 情報局｜連線任務</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="assets/online-v2.7.0-beta.css">
+<link rel="stylesheet" href="assets/online-v2.7.0-beta1.css">
 <style id="settings-critical-style">
 /* v2.6.0 R1：設定入口不依賴外部 CSS 的快取狀態 */
 .topbar{position:relative}.top-links{margin-left:auto}
@@ -66,7 +66,7 @@
     </section>
     <section id="room" hidden>
       <div class="room-heading"><div><span class="kicker">LIVE OPERATION</span><h2 id="roomHeading">機密任務</h2><p id="roomSub">等待同步……</p></div><button class="outline compact" id="homeButton">返回首頁</button></div>
-      <div id="hostSwitchTabs" class="host-switch-tabs" hidden><button type="button" data-host-tab="host" class="outline compact">任務指揮中心</button><button type="button" data-host-tab="player" class="outline compact">我的玩家畫面</button><span class="host-switch-hint">個人情報只會在玩家畫面展開，請避免投影</span></div>
+      <div id="dualPanelNotice" class="dual-panel-notice" hidden role="note"><span>◈ <strong>雙面板任務模式</strong> · 左側是玩家畫面，右側是任務指揮中心。手機則改為上下排列。</span><span>私人資訊預設封存；若要投影，請先封存角色卡，避免洩漏身分。</span><button type="button" id="sealPrivatePanel" class="outline compact" data-always="true">🔒 封存私人情報</button></div>
       <div class="code-banner"><div><small>房間代碼</small><strong id="roomCode">——</strong></div><button id="copyInvite" class="outline compact">複製邀請連結</button><span id="liveStatus">● 已連線</span></div>
       <div class="operation-ribbon" role="status"><span id="roomPlayModeTag" class="operation-chip">近距任務</span><span id="roomDiscussionTag">現場討論 · 主控推進</span></div>
       <section id="hostInvitePanel" class="panel invite-panel" hidden>
@@ -88,6 +88,10 @@
           </div>
         </div>
       </section>
+      <div id="roomWorkspace" class="room-workspace">
+      <section id="playerArea" hidden>
+        <article class="panel player-panel"><span class="kicker">YOUR CLASSIFIED DOSSIER</span><h3 id="playerPhaseTitle"></h3><p id="playerPhaseDesc"></p><div id="playerContents"></div></article>
+      </section>
       <section id="hostArea" hidden>
         <div class="cols">
           <article class="panel"><span class="kicker">COMMAND CENTER</span><h3 id="hostPhaseTitle">等待玩家加入</h3><p id="hostPhaseDesc"></p><div class="host-controls" id="hostControls"></div></article>
@@ -102,9 +106,7 @@
           </div></details>
         <div id="hostCardPreview" class="panel card-preview" hidden></div>
       </section>
-      <section id="playerArea" hidden>
-        <article class="panel player-panel"><span class="kicker">YOUR CLASSIFIED DOSSIER</span><h3 id="playerPhaseTitle"></h3><p id="playerPhaseDesc"></p><div id="playerContents"></div></article>
-      </section>
+      </div>
     </section>
     <section id="library" hidden>
       <div class="room-heading"><div><span class="kicker">INTELLIGENCE ARCHIVE</span><h2>情報卡資料庫</h2><p>設定9項或16項情報內容，不必安排固定位置；每次抽卡由 Supabase 重新亂數排列位置。</p></div><button class="outline compact" id="closeLibrary">返回任務</button></div>
@@ -113,7 +115,7 @@
       </article><article class="panel"><div class="split-title"><h3>現有情報卡</h3><span id="libraryCount"></span></div><div id="cardList" class="card-list">尚無情報卡。</div></article></div>
     </section>
   </main>
-  <footer>606 INTELLIGENCE BUREAU · 連線遊戲僅同步必要資訊 · 身分與答案由伺服器保護 · v2.7.0 Beta</footer>
+  <footer>606 INTELLIGENCE BUREAU · 連線遊戲僅同步必要資訊 · 身分與答案由伺服器保護 · v2.7.0 Beta.1</footer>
 </div>
 <dialog id="myRoomsDialog" class="settings-dialog my-rooms-dialog" aria-labelledby="myRoomsTitle">
   <div class="settings-header"><div><span class="kicker">ROOM ARCHIVE</span><h2 id="myRoomsTitle">我的房間</h2></div><button class="settings-close" id="closeMyRooms" type="button" aria-label="關閉房間管理">✕</button></div>
@@ -250,5 +252,5 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
 <script src="assets/qr-local-v2.5.7.js" defer></script>
-<script src="assets/online-v2.7.0-beta.js" defer></script>
+<script src="assets/online-v2.7.0-beta1.js" defer></script>
 </body></html>
