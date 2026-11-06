@@ -5,7 +5,10 @@
 <meta name="theme-color" content="#0a2832">
 <title>606 情報局｜連線任務</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="assets/online-v2.7.0-beta1.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Iansui&display=swap">
+<link rel="stylesheet" href="assets/online-v2.7.0-beta2.css">
 <style id="settings-critical-style">
 /* v2.6.0 R1：設定入口不依賴外部 CSS 的快取狀態 */
 .topbar{position:relative}.top-links{margin-left:auto}
@@ -25,6 +28,7 @@
 @media(max-width:800px){.topbar{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:'brand config' 'links links';height:auto;min-height:104px;gap:8px;padding:12px 0}.topbar>.brand{grid-area:brand;min-width:0}.topbar>.top-links{grid-area:links;margin:0;justify-content:flex-end}.topbar>.settings-shortcut{grid-area:config;justify-self:end}}
 @media(max-width:560px){.shell{padding:0 14px}.settings-shortcut{font-size:11px;padding:5px 9px;min-height:31px}.brand{gap:8px}.brand img{width:43px;height:43px}.brand strong{font-size:16px;letter-spacing:2px}.brand small{font-size:9px;letter-spacing:1.3px}.top-links a,.top-links span{font-size:12px;padding:6px 11px}.settings-dialog{padding:19px}.settings-header h2{font-size:22px}.settings-actions{display:grid;grid-template-columns:1fr}.settings-actions button{width:100%}}
 </style>
+<link rel="stylesheet" href="assets/iansui-theme-v2.7.0-beta2.css">
 </head>
 <body>
 <div class="shell">
@@ -45,6 +49,11 @@
           <label class="mode-card"><input type="radio" name="createPlayMode" value="near" checked><span><strong>近距任務</strong><small>現場口頭發言、討論與投票（沿用原有流程）</small></span></label>
           <label class="mode-card"><input type="radio" name="createPlayMode" value="remote"><span><strong>遠距任務</strong><small>線上文字線索與投票（R1 基礎版，互動將分階段開放）</small></span></label>
         </fieldset>
+        <div id="nearTimerSetup" class="remote-setup">
+          <label>近距討論計時<select id="createNearTimerMode"><option value="timed" selected>啟用同步倒數（時間到提醒，不自動揭曉）</option><option value="manual">不使用討論倒數</option></select></label>
+          <label id="nearTimerMinutesField">討論時間（1～60 分鐘）<input id="createNearMinutes" type="number" min="1" max="60" step="1" value="5" inputmode="numeric"></label>
+          <p class="r1-context-note">所有玩家會看到相同倒數；主控可開始、暫停、繼續或延長，倒數結束仍由現場主控推進遊戲。</p>
+        </div>
         <div id="remoteSetup" class="remote-setup" hidden>
           <label>自由討論方式<select id="createDiscussionMode"><option value="manual">手動結束（由主控控制）</option><option value="timed">限時討論（時間到自動結束）</option></select></label>
           <div id="discussionTimerFields" hidden><label>討論時間<select id="createDiscussionSeconds"><option value="180">3 分鐘</option><option value="300" selected>5 分鐘</option><option value="480">8 分鐘</option><option value="600">10 分鐘</option></select></label></div>
@@ -69,6 +78,11 @@
       <div id="dualPanelNotice" class="dual-panel-notice" hidden role="note"><span>◈ <strong>雙面板任務模式</strong> · 左側是玩家畫面，右側是任務指揮中心。手機則改為上下排列。</span><span>私人資訊預設封存；若要投影，請先封存角色卡，避免洩漏身分。</span><button type="button" id="sealPrivatePanel" class="outline compact" data-always="true">🔒 封存私人情報</button></div>
       <div class="code-banner"><div><small>房間代碼</small><strong id="roomCode">——</strong></div><button id="copyInvite" class="outline compact">複製邀請連結</button><span id="liveStatus">● 已連線</span></div>
       <div class="operation-ribbon" role="status"><span id="roomPlayModeTag" class="operation-chip">近距任務</span><span id="roomDiscussionTag">現場討論 · 主控推進</span></div>
+      <section id="sharedDiscussionTimer" class="shared-discussion-timer" hidden aria-label="全員同步討論倒數">
+        <span class="shared-timer-label">◷ 討論時間 <small id="sharedTimerStatus">等待開始</small></span>
+        <strong id="sharedTimerValue" role="timer" aria-live="off">05:00</strong>
+        <span id="sharedTimerHint" class="shared-timer-hint">同步計時</span>
+      </section>
       <section id="hostInvitePanel" class="panel invite-panel" hidden>
         <div class="invite-panel-head"><div><span class="kicker">QUICK JOIN</span><h3>快速加入任務</h3><p>建立房間後，可直接投影 QR code 讓學生掃描加入，也可複製邀請連結分享。</p></div><button id="copyInviteSecondary" class="outline compact" type="button">複製邀請連結</button></div>
         <div class="invite-grid">
@@ -115,7 +129,7 @@
       </article><article class="panel"><div class="split-title"><h3>現有情報卡</h3><span id="libraryCount"></span></div><div id="cardList" class="card-list">尚無情報卡。</div></article></div>
     </section>
   </main>
-  <footer>606 INTELLIGENCE BUREAU · 連線遊戲僅同步必要資訊 · 身分與答案由伺服器保護 · v2.7.0 Beta.1</footer>
+  <footer>606 INTELLIGENCE BUREAU · 連線遊戲僅同步必要資訊 · 身分與答案由伺服器保護 · v2.7.0 Beta.2</footer>
 </div>
 <dialog id="myRoomsDialog" class="settings-dialog my-rooms-dialog" aria-labelledby="myRoomsTitle">
   <div class="settings-header"><div><span class="kicker">ROOM ARCHIVE</span><h2 id="myRoomsTitle">我的房間</h2></div><button class="settings-close" id="closeMyRooms" type="button" aria-label="關閉房間管理">✕</button></div>
@@ -252,5 +266,5 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
 <script src="assets/qr-local-v2.5.7.js" defer></script>
-<script src="assets/online-v2.7.0-beta1.js" defer></script>
+<script src="assets/online-v2.7.0-beta2.js" defer></script>
 </body></html>
