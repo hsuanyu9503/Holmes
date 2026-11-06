@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Iansui&display=swap">
-<link rel="stylesheet" href="assets/online-v2.7.0-beta2.css">
+<link rel="stylesheet" href="assets/online-v2.7.1-voice-beta.css">
 <style id="settings-critical-style">
 /* v2.6.0 R1：設定入口不依賴外部 CSS 的快取狀態 */
 .topbar{position:relative}.top-links{margin-left:auto}
@@ -28,7 +28,7 @@
 @media(max-width:800px){.topbar{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:'brand config' 'links links';height:auto;min-height:104px;gap:8px;padding:12px 0}.topbar>.brand{grid-area:brand;min-width:0}.topbar>.top-links{grid-area:links;margin:0;justify-content:flex-end}.topbar>.settings-shortcut{grid-area:config;justify-self:end}}
 @media(max-width:560px){.shell{padding:0 14px}.settings-shortcut{font-size:11px;padding:5px 9px;min-height:31px}.brand{gap:8px}.brand img{width:43px;height:43px}.brand strong{font-size:16px;letter-spacing:2px}.brand small{font-size:9px;letter-spacing:1.3px}.top-links a,.top-links span{font-size:12px;padding:6px 11px}.settings-dialog{padding:19px}.settings-header h2{font-size:22px}.settings-actions{display:grid;grid-template-columns:1fr}.settings-actions button{width:100%}}
 </style>
-<link rel="stylesheet" href="assets/iansui-theme-v2.7.0-beta2.css">
+<link rel="stylesheet" href="assets/iansui-theme-v2.7.0-stable.css">
 </head>
 <body>
 <div class="shell">
@@ -47,7 +47,7 @@
         <fieldset class="mode-selection" aria-label="選擇連線遊戲方式">
           <legend>遊戲方式</legend>
           <label class="mode-card"><input type="radio" name="createPlayMode" value="near" checked><span><strong>近距任務</strong><small>現場口頭發言、討論與投票（沿用原有流程）</small></span></label>
-          <label class="mode-card"><input type="radio" name="createPlayMode" value="remote"><span><strong>遠距任務</strong><small>線上文字線索與投票（R1 基礎版，互動將分階段開放）</small></span></label>
+          <label class="mode-card"><input type="radio" name="createPlayMode" value="remote"><span><strong>遠距任務</strong><small>線上文字線索與投票（線索、討論、投票與揭曉已開放）</small></span></label>
         </fieldset>
         <div id="nearTimerSetup" class="remote-setup">
           <label>近距討論計時<select id="createNearTimerMode"><option value="timed" selected>啟用同步倒數（時間到提醒，不自動揭曉）</option><option value="manual">不使用討論倒數</option></select></label>
@@ -77,6 +77,19 @@
       <div class="room-heading"><div><span class="kicker">LIVE OPERATION</span><h2 id="roomHeading">機密任務</h2><p id="roomSub">等待同步……</p></div><button class="outline compact" id="homeButton">返回首頁</button></div>
       <div id="dualPanelNotice" class="dual-panel-notice" hidden role="note"><span>◈ <strong>雙面板任務模式</strong> · 左側是玩家畫面，右側是任務指揮中心。手機則改為上下排列。</span><span>私人資訊預設封存；若要投影，請先封存角色卡，避免洩漏身分。</span><button type="button" id="sealPrivatePanel" class="outline compact" data-always="true">🔒 封存私人情報</button></div>
       <div class="code-banner"><div><small>房間代碼</small><strong id="roomCode">——</strong></div><button id="copyInvite" class="outline compact">複製邀請連結</button><span id="liveStatus">● 已連線</span></div>
+      <section id="voicePanel" class="voice-panel panel" aria-label="多人語音討論" hidden>
+        <div class="voice-header"><div><span class="kicker">SECURE VOICE CHANNEL</span><h3>語音討論頻道</h3><p class="voice-help">遠距自由討論時可使用語音或文字。只有主動開啟麥克風才會傳送聲音，不會錄音。</p></div><span id="voiceConnectionStatus" class="voice-status" role="status">尚未加入</span></div>
+        <div class="voice-actions">
+          <button id="voiceJoin" data-always="true" class="primary compact" type="button">加入語音</button>
+          <button id="voiceMic" data-always="true" class="outline compact" type="button" disabled>🎙 開啟麥克風</button>
+          <button id="voiceResume" data-always="true" class="outline compact" type="button" hidden>🔊 啟用聲音播放</button>
+          <button id="voiceLeave" data-always="true" class="outline compact" type="button" disabled>離開語音</button>
+        </div>
+        <div class="voice-meta"><span id="voiceCount">目前 0 人連線</span><span>建議佩戴耳機以避免回音</span></div>
+        <div id="voiceParticipants" class="voice-participants" aria-live="polite"></div>
+        <p id="voiceError" class="voice-error" role="alert" hidden></p>
+        <div id="voiceAudioTracks" aria-hidden="true" hidden></div>
+      </section>
       <div class="operation-ribbon" role="status"><span id="roomPlayModeTag" class="operation-chip">近距任務</span><span id="roomDiscussionTag">現場討論 · 主控推進</span></div>
       <section id="sharedDiscussionTimer" class="shared-discussion-timer" hidden aria-label="全員同步討論倒數">
         <span class="shared-timer-label">◷ 討論時間 <small id="sharedTimerStatus">等待開始</small></span>
@@ -129,7 +142,7 @@
       </article><article class="panel"><div class="split-title"><h3>現有情報卡</h3><span id="libraryCount"></span></div><div id="cardList" class="card-list">尚無情報卡。</div></article></div>
     </section>
   </main>
-  <footer>606 INTELLIGENCE BUREAU · 連線遊戲僅同步必要資訊 · 身分與答案由伺服器保護 · v2.7.0 Beta.2</footer>
+  <footer>606 INTELLIGENCE BUREAU · 連線遊戲僅同步必要資訊 · 身分與答案由伺服器保護 · v2.7.1 Voice Beta</footer>
 </div>
 <dialog id="myRoomsDialog" class="settings-dialog my-rooms-dialog" aria-labelledby="myRoomsTitle">
   <div class="settings-header"><div><span class="kicker">ROOM ARCHIVE</span><h2 id="myRoomsTitle">我的房間</h2></div><button class="settings-close" id="closeMyRooms" type="button" aria-label="關閉房間管理">✕</button></div>
@@ -266,5 +279,6 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
 <script src="assets/qr-local-v2.5.7.js" defer></script>
-<script src="assets/online-v2.7.0-beta2.js" defer></script>
+<script src="assets/voice-v2.7.1-beta.js" defer></script>
+<script src="assets/online-v2.7.1-voice-beta.js" defer></script>
 </body></html>
