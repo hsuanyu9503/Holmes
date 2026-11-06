@@ -1,0 +1,10 @@
+/* 606 情報局 v2.7.0 Beta.2 — 芫荽 Iansui 字體（透過 Google Fonts 分段載入，不打包字型檔） */
+:root{--ui-sans:"Iansui","PingFang TC","Microsoft JhengHei",sans-serif;--display-serif:"Iansui","PingFang TC",serif;--bureau-sans:"Iansui","PingFang TC",sans-serif;--bureau-serif:"Iansui","PingFang TC",serif}
+body,button,input,select,option,textarea,dialog,h1,h2,h3,h4,h5,h6,legend,label,summary,table,th,td,
+.brand,.brand-name,.role-heading,.mission-stage h2,.panel h2,.panel h3,.room-heading h2,.settings-header h2,
+.masthead h1,.reveal-main-number,.code-cell strong,.intel-title,.r5-spy-name,.r5-final-result,
+.role-waiting-card strong,.draw-stack span,.role-card,.chat-msg,.mode-card,.player-panel{
+  font-family:"Iansui","PingFang TC","Microsoft JhengHei",sans-serif!important;
+}
+/* 房間代碼與計時的數字維持等寬特性，避免跳動 */
+.code-banner strong,.shared-discussion-timer strong,.chat-timer strong{font-variant-numeric:tabular-nums}
