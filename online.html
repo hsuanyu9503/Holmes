@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Iansui&display=swap">
-<link rel="stylesheet" href="assets/online-v2.7.1-voice-beta.css">
+<link rel="stylesheet" href="assets/online-v2.8.0-beta.css">
 <style id="settings-critical-style">
 /* v2.6.0 R1：設定入口不依賴外部 CSS 的快取狀態 */
 .topbar{position:relative}.top-links{margin-left:auto}
@@ -47,7 +47,7 @@
         <fieldset class="mode-selection" aria-label="選擇連線遊戲方式">
           <legend>遊戲方式</legend>
           <label class="mode-card"><input type="radio" name="createPlayMode" value="near" checked><span><strong>近距任務</strong><small>現場口頭發言、討論與投票（沿用原有流程）</small></span></label>
-          <label class="mode-card"><input type="radio" name="createPlayMode" value="remote"><span><strong>遠距任務</strong><small>線上文字線索與投票（線索、討論、投票與揭曉已開放）</small></span></label>
+          <label class="mode-card"><input type="radio" name="createPlayMode" value="remote"><span><strong>遠距任務</strong><small>選擇文字推理或即時語音推理，使用不同裝置連線</small></span></label>
         </fieldset>
         <div id="nearTimerSetup" class="remote-setup">
           <label>近距討論計時<select id="createNearTimerMode"><option value="timed" selected>啟用同步倒數（時間到提醒，不自動揭曉）</option><option value="manual">不使用討論倒數</option></select></label>
@@ -55,6 +55,12 @@
           <p class="r1-context-note">所有玩家會看到相同倒數；主控可開始、暫停、繼續或延長，倒數結束仍由現場主控推進遊戲。</p>
         </div>
         <div id="remoteSetup" class="remote-setup" hidden>
+          <fieldset class="remote-mode-selector" aria-label="選擇遠距互動方式">
+            <legend>遠距互動模式</legend>
+            <label class="remote-mode-choice"><input type="radio" name="createRemoteMode" value="text" checked><span><strong>✎ 純文字任務</strong><small>文字線索與聊天室討論 · 完整文字紀錄 · 不啟用麥克風</small></span></label>
+            <label class="remote-mode-choice"><input type="radio" name="createRemoteMode" value="voice"><span><strong>🎙 純語音任務</strong><small>依序口述線索與即時語音討論 · 無錄音、無逐字稿</small></span></label>
+          </fieldset>
+          <p class="remote-mode-notice" id="remoteModeNotice" role="note">建立房間後，互動模式將固定，無法在遊戲中更換。</p>
           <label>自由討論方式<select id="createDiscussionMode"><option value="manual">手動結束（由主控控制）</option><option value="timed">限時討論（時間到自動結束）</option></select></label>
           <div id="discussionTimerFields" hidden><label>討論時間<select id="createDiscussionSeconds"><option value="180">3 分鐘</option><option value="300" selected>5 分鐘</option><option value="480">8 分鐘</option><option value="600">10 分鐘</option></select></label></div>
           <p class="r1-context-note">遠距正式線索、自由討論、秘密投票、臥底猜測與結算皆已開放。</p>
@@ -77,14 +83,16 @@
       <div class="room-heading"><div><span class="kicker">LIVE OPERATION</span><h2 id="roomHeading">機密任務</h2><p id="roomSub">等待同步……</p></div><button class="outline compact" id="homeButton">返回首頁</button></div>
       <div id="dualPanelNotice" class="dual-panel-notice" hidden role="note"><span>◈ <strong>雙面板任務模式</strong> · 左側是玩家畫面，右側是任務指揮中心。手機則改為上下排列。</span><span>私人資訊預設封存；若要投影，請先封存角色卡，避免洩漏身分。</span><button type="button" id="sealPrivatePanel" class="outline compact" data-always="true">🔒 封存私人情報</button></div>
       <div class="code-banner"><div><small>房間代碼</small><strong id="roomCode">——</strong></div><button id="copyInvite" class="outline compact">複製邀請連結</button><span id="liveStatus">● 已連線</span></div>
-      <section id="voicePanel" class="voice-panel panel" aria-label="多人語音討論" hidden>
-        <div class="voice-header"><div><span class="kicker">SECURE VOICE CHANNEL</span><h3>語音討論頻道</h3><p class="voice-help">遠距自由討論時可使用語音或文字。只有主動開啟麥克風才會傳送聲音，不會錄音。</p></div><span id="voiceConnectionStatus" class="voice-status" role="status">尚未加入</span></div>
+      <section id="voicePanel" class="voice-panel panel" aria-label="多人語音情報頻道" hidden>
+        <div class="voice-header"><div><span class="kicker">SECURE VOICE CHANNEL</span><h3>語音情報頻道</h3><p class="voice-help" id="voiceHelp">本房間使用純語音提供線索與討論，不錄音、不轉文字。</p></div><span id="voiceConnectionStatus" class="voice-status" role="status">尚未加入</span></div>
+        <div id="voiceTurnNotice" class="voice-turn-notice" role="status" aria-live="polite" hidden></div>
         <div class="voice-actions">
           <button id="voiceJoin" data-always="true" class="primary compact" type="button">加入語音</button>
           <button id="voiceMic" data-always="true" class="outline compact" type="button" disabled>🎙 開啟麥克風</button>
           <button id="voiceResume" data-always="true" class="outline compact" type="button" hidden>🔊 啟用聲音播放</button>
           <button id="voiceLeave" data-always="true" class="outline compact" type="button" disabled>離開語音</button>
         </div>
+        <div id="voiceClueCompleteWrap" class="voice-clue-complete" hidden><button id="voiceClueDone" data-always="true" data-action="clue:voice-done" class="outline compact" type="button" disabled>✓ 完成口頭發言 · 下一位</button><small>說完並確認其他玩家聽見後，再按此按鈕。</small></div>
         <div class="voice-meta"><span id="voiceCount">目前 0 人連線</span><span>建議佩戴耳機以避免回音</span></div>
         <div id="voiceParticipants" class="voice-participants" aria-live="polite"></div>
         <p id="voiceError" class="voice-error" role="alert" hidden></p>
@@ -142,7 +150,7 @@
       </article><article class="panel"><div class="split-title"><h3>現有情報卡</h3><span id="libraryCount"></span></div><div id="cardList" class="card-list">尚無情報卡。</div></article></div>
     </section>
   </main>
-  <footer>606 INTELLIGENCE BUREAU · 連線遊戲僅同步必要資訊 · 身分與答案由伺服器保護 · v2.7.1 Voice Beta</footer>
+  <footer>606 INTELLIGENCE BUREAU · 連線遊戲僅同步必要資訊 · 身分與答案由伺服器保護 · v2.8.0 Beta</footer>
 </div>
 <dialog id="myRoomsDialog" class="settings-dialog my-rooms-dialog" aria-labelledby="myRoomsTitle">
   <div class="settings-header"><div><span class="kicker">ROOM ARCHIVE</span><h2 id="myRoomsTitle">我的房間</h2></div><button class="settings-close" id="closeMyRooms" type="button" aria-label="關閉房間管理">✕</button></div>
@@ -279,6 +287,6 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
 <script src="assets/qr-local-v2.5.7.js" defer></script>
-<script src="assets/voice-v2.7.1-beta.js" defer></script>
-<script src="assets/online-v2.7.1-voice-beta.js" defer></script>
+<script src="assets/voice-v2.8.0-beta.js" defer></script>
+<script src="assets/online-v2.8.0-beta.js" defer></script>
 </body></html>
